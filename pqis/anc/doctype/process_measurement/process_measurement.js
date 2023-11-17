@@ -6,8 +6,8 @@ frappe.ui.form.on("Process Measurement", {
         $('*[data-fieldname="process_measurement_details"]').find('button.grid-add-row').addClass('hide');
 
         if (frm.is_new()) {
-            frm.set_value('workflow_state', "Not Saved");
-            frm.refresh_fields('workflow_state');
+            frm.set_value('workflow_state_psm', "Not Saved");
+            frm.refresh_fields('workflow_state_psm');
 
             frm.set_value('date', frappe.datetime.now_date());
             frm.refresh_fields('date');
@@ -91,12 +91,12 @@ frappe.ui.form.on("Process Measurement", {
             $('.actions-btn-group').hide();
 
             frm.add_custom_button('Submit', () => {
-                frm.set_value('workflow_state', "Entered");
+                frm.set_value('workflow_state_psm', "Entered");
                 frm.save();
             }).addClass("btn-primary");
 
             frm.add_custom_button('Cancel', () => {
-                frm.set_value('workflow_state', "Cancelled");
+                frm.set_value('workflow_state_psm', "Cancelled");
                 frm.save();
             });
         }
@@ -190,8 +190,8 @@ frappe.ui.form.on("Process Measurement", {
         frm.refresh_fields("process_measurement_details");
 
         if (frm.doc.workflow_state_psm === "Not Saved") {
-            frm.set_value('workflow_state', "Draft");
-            frm.refresh_fields('workflow_state');
+            frm.set_value('workflow_state_psm', "Draft");
+            frm.refresh_fields('workflow_state_psm');
         }
     }
 });
