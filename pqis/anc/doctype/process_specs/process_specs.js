@@ -14,8 +14,8 @@ frappe.ui.form.on("Process Specs", {
         $('*[data-fieldname="section_break_dvys"]').hide();
 
         if (frm.is_new()) {
-            frm.set_value('workflow_state_pssp', "Not Saved");
-            frm.refresh_fields('workflow_state_pssp');
+            frm.set_value('workflow_state', "Not Saved");
+            frm.refresh_fields('workflow_state');
 
             frm.call({
                 method: 'pqis.anc.doctype.process_specs.process_specs.auto_increment_id',
@@ -322,8 +322,8 @@ frappe.ui.form.on("Process Specs", {
 
     before_save(frm) {
         if (frm.doc.workflow_state_pssp === "Not Saved") {
-            frm.set_value('workflow_state_pssp', "Draft");
-            frm.refresh_fields('workflow_state_pssp');
+            frm.set_value('workflow_state', "Draft");
+            frm.refresh_fields('workflow_state');
         }
     }
 });
