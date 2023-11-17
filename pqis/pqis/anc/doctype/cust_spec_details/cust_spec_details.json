@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-10-05 14:45:27.265438",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "custspecdetid",
+  "propertyid",
+  "property",
+  "target"
+ ],
+ "fields": [
+  {
+   "fieldname": "custspecdetid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Spec Detail ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "propertyid",
+   "fieldtype": "Link",
+   "label": "Property ID",
+   "options": "Property"
+  },
+  {
+   "fetch_from": "propertyid.property",
+   "fieldname": "property",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Property",
+   "read_only": 1
+  },
+  {
+   "fieldname": "target",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Target"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-10-06 21:00:40.141450",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Cust Spec Details",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

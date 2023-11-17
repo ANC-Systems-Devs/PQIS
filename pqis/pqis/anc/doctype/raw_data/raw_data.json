@@ -1,0 +1,139 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-09-21 10:30:55.657378",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rawdataid",
+  "data",
+  "datetime",
+  "sourceid",
+  "sourcename",
+  "column_break_ujwp",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "rawdataid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Raw Data ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "data",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Data"
+  },
+  {
+   "fieldname": "datetime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Datetime"
+  },
+  {
+   "fieldname": "sourceid",
+   "fieldtype": "Link",
+   "label": "Source ID",
+   "options": "Source"
+  },
+  {
+   "fetch_from": "sourceid.sourcename",
+   "fieldname": "sourcename",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Source",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ujwp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Processed\nUnprocessed",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-14 10:34:58.428847",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Raw Data",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Viewer",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Configuration Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "rawdataid, data",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "rawdataid"
+}

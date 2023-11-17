@@ -1,0 +1,319 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-09-27 18:39:02.028750",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "is_adding_non_stock_item",
+  "is_item_less_than_fifty",
+  "storeid",
+  "description",
+  "keyword",
+  "partnum",
+  "mfgname",
+  "drawingnum",
+  "order_stock_qty",
+  "spare_onsite_qty",
+  "min",
+  "max",
+  "column_break_ouuj",
+  "status",
+  "repairablespare",
+  "unitofissue",
+  "unitcost",
+  "aisle",
+  "shelf",
+  "bin",
+  "vendor",
+  "section_break_cvmc",
+  "inv_assets",
+  "section_break_nyrd",
+  "column_break_ydxw",
+  "is_cost_over_fiftyk",
+  "is_it_capital_spare",
+  "reason",
+  "column_break_asid",
+  "ase_num",
+  "product_information_section",
+  "vendorstockingloc",
+  "leadtime",
+  "column_break_wcuh",
+  "storesrecommends",
+  "section_break_jzjs",
+  "requestedby",
+  "mainsaveradmin",
+  "deptsupervisor"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "is_adding_non_stock_item",
+   "fieldtype": "Check",
+   "label": "IF ADDING AS NON STOCK ITEM CHECK HERE"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_item_less_than_fifty",
+   "fieldtype": "Check",
+   "label": "IS ITEM LESS THAN $50"
+  },
+  {
+   "fieldname": "storeid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Stores #",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "Description",
+   "max_height": "100px"
+  },
+  {
+   "fieldname": "keyword",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Key Word"
+  },
+  {
+   "fieldname": "partnum",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Part #"
+  },
+  {
+   "fieldname": "mfgname",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Mfg. Name"
+  },
+  {
+   "fieldname": "drawingnum",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Drawing #"
+  },
+  {
+   "description": "Stores to order for stock",
+   "fieldname": "order_stock_qty",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  },
+  {
+   "description": "Spare onsite - do not order",
+   "fieldname": "spare_onsite_qty",
+   "fieldtype": "Int",
+   "label": "Quantity"
+  },
+  {
+   "fieldname": "min",
+   "fieldtype": "Float",
+   "label": "Min"
+  },
+  {
+   "fieldname": "max",
+   "fieldtype": "Float",
+   "label": "Max"
+  },
+  {
+   "fieldname": "column_break_ouuj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "New",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "New\nSubmit\nSubmit for Approval\nApprove\nDeactivate\nActivate",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: doc.status !== \"New\";",
+   "fieldname": "repairablespare",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Repairable Spare"
+  },
+  {
+   "depends_on": "eval: doc.status !== \"New\";",
+   "fieldname": "unitofissue",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit of Issue"
+  },
+  {
+   "depends_on": "eval: doc.status !== \"New\";",
+   "fieldname": "unitcost",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit Cost"
+  },
+  {
+   "depends_on": "eval: doc.status !== \"New\";",
+   "fieldname": "aisle",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Aisle"
+  },
+  {
+   "depends_on": "eval: doc.status !== \"New\";",
+   "fieldname": "shelf",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Shelf"
+  },
+  {
+   "depends_on": "eval: doc.status !== \"New\";",
+   "fieldname": "bin",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Bin"
+  },
+  {
+   "depends_on": "eval: doc.status !== \"New\";",
+   "fieldname": "vendor",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vendor Name or #"
+  },
+  {
+   "fieldname": "section_break_cvmc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "inv_assets",
+   "fieldtype": "Table",
+   "label": "Inventory Assets",
+   "options": "Inventory Asset"
+  },
+  {
+   "depends_on": "eval: doc.status !== \"New\";",
+   "fieldname": "section_break_nyrd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ydxw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_cost_over_fiftyk",
+   "fieldtype": "Check",
+   "label": " IS COST OVER $50,000"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_cost_over_fiftyk === 1;",
+   "fieldname": "is_it_capital_spare",
+   "fieldtype": "Check",
+   "label": "IS IT A CAPITAL SPARE"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Text",
+   "label": "Why should this be stocked on site?",
+   "max_height": "150px"
+  },
+  {
+   "fieldname": "column_break_asid",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.is_it_capital_spare === 1;",
+   "fieldname": "ase_num",
+   "fieldtype": "Int",
+   "label": "ASE #"
+  },
+  {
+   "depends_on": "eval: doc.status !== \"New\";",
+   "fieldname": "product_information_section",
+   "fieldtype": "Section Break",
+   "label": "Product Information"
+  },
+  {
+   "fieldname": "vendorstockingloc",
+   "fieldtype": "Data",
+   "label": "Vendor Stocking Location"
+  },
+  {
+   "fieldname": "leadtime",
+   "fieldtype": "Time",
+   "label": "Lead Time"
+  },
+  {
+   "fieldname": "column_break_wcuh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "storesrecommends",
+   "fieldtype": "Text",
+   "label": "Stores Recommendations",
+   "max_height": "100px"
+  },
+  {
+   "fieldname": "section_break_jzjs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "requestedby",
+   "fieldtype": "Data",
+   "label": "Requested By"
+  },
+  {
+   "fieldname": "mainsaveradmin",
+   "fieldtype": "Data",
+   "label": "Mainsaver Administrator"
+  },
+  {
+   "fieldname": "deptsupervisor",
+   "fieldtype": "Data",
+   "label": "Dept. Supervisor"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-14 10:30:48.100766",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Store Inventory",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "storeid"
+}

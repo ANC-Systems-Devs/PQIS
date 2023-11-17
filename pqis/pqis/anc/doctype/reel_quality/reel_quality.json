@@ -1,0 +1,83 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-10-05 08:43:10.849539",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reelqualityid",
+  "prodspecid",
+  "average",
+  "standard_deviation",
+  "mean",
+  "median",
+  "valuetype",
+  "value"
+ ],
+ "fields": [
+  {
+   "fieldname": "reelqualityid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Reel Quality ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "prodspecid",
+   "fieldtype": "Link",
+   "label": "Product Spec",
+   "options": "Prod Specs"
+  },
+  {
+   "fieldname": "average",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Average"
+  },
+  {
+   "fieldname": "standard_deviation",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Standard Deviation"
+  },
+  {
+   "fieldname": "mean",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Mean"
+  },
+  {
+   "fieldname": "median",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Median"
+  },
+  {
+   "fieldname": "value",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Value"
+  },
+  {
+   "fieldname": "valuetype",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Value Type"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-10-20 13:11:57.569683",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Reel Quality",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

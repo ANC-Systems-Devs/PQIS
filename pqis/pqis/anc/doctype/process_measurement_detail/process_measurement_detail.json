@@ -1,0 +1,128 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-11-07 13:47:39.046453",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "processmeasurementdtlid",
+  "time",
+  "subprocessid",
+  "subprocessdesc",
+  "propertyid",
+  "property",
+  "tag",
+  "units",
+  "value",
+  "column_break_oayh",
+  "prev_value_first",
+  "prev_value_second",
+  "is_null"
+ ],
+ "fields": [
+  {
+   "fieldname": "processmeasurementdtlid",
+   "fieldtype": "Data",
+   "label": "Process Measurement Detail ID",
+   "read_only": 1
+  },
+  {
+   "default": "00:00:00",
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Value"
+  },
+  {
+   "fieldname": "subprocessid",
+   "fieldtype": "Link",
+   "label": "Subprocess ID",
+   "options": "Sub Process",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "subprocessid.description",
+   "fieldname": "subprocessdesc",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Subprocess",
+   "read_only": 1
+  },
+  {
+   "fieldname": "propertyid",
+   "fieldtype": "Link",
+   "label": "Property ID",
+   "options": "Property",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "propertyid.property",
+   "fieldname": "property",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Property",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "propertyid.rt_tag",
+   "fieldname": "tag",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tag",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "propertyid.units",
+   "fieldname": "units",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Units",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_oayh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "prev_value_first",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Previous Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "prev_value_second",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Previous Second Value",
+   "read_only": 1
+  },
+  {
+   "fieldname": "is_null",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Is Null"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-11-16 15:52:31.610988",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Process Measurement Detail",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
