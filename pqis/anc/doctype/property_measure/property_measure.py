@@ -10,15 +10,15 @@ def auto_increment_id():
 		doc = frappe.db.sql("""
                 SELECT
                     next_not_cached_value
-                FROM `area_id_seq`
+                FROM `property_measure_id_seq`
                 """)
 
 		number = doc[0][0]
-		formatted = f'A{number:04d}'
+		formatted = f'PROPM{number:04d}'
 
 		return {"status": "Success", "message": formatted}
 	except Exception as e: 
 		return {"status": "Error", "message": "Failed to fetch record.", "exception": e}
-
-class Area(Document):
+	
+class PropertyMeasure(Document):
 	pass

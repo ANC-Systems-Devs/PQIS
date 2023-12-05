@@ -12,7 +12,7 @@ frappe.ui.form.on("Roll", {
             }
 
             if (!frm.is_new()) {
-                    frm.disable_save();
+                    // frm.disable_save();
 
                     frm.add_custom_button('Manual Entry', () => {
                         const d = new frappe.ui.Dialog({

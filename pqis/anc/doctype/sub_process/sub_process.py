@@ -7,12 +7,18 @@ from frappe.model.document import Document
 @frappe.whitelist()
 def auto_increment_id():
 	try:
-		doc = frappe.db.count('Sub Process')
-		count = doc + 1
+		doc = frappe.db.sql("""
+                SELECT
+                    next_not_cached_value
+                FROM `sub_process_id_seq`
+                """)
 
-		return {"status": "Success", "result": "{}{}".format("SBPS0", count)}
+		number = doc[0][0]
+		formatted = f'SPRC{number:04d}'
+
+		return {"status": "Success", "message": formatted}
 	except Exception as e: 
-		return {"status": "Error", "message": "Failed to save record.", "exception": e}
+		return {"status": "Error", "message": "Failed to fetch record.", "exception": e}
 
 class SubProcess(Document):
 	pass

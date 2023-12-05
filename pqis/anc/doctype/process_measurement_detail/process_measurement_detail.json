@@ -14,6 +14,8 @@
   "property",
   "tag",
   "units",
+  "measureid",
+  "measurename",
   "value",
   "column_break_oayh",
   "prev_value_first",
@@ -95,14 +97,14 @@
    "fieldname": "prev_value_first",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Previous Value",
+   "label": "Previous Date Value",
    "read_only": 1
   },
   {
    "fieldname": "prev_value_second",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Previous Second Value",
+   "label": "Previous Second Date Value",
    "read_only": 1
   },
   {
@@ -110,12 +112,27 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Is Null"
+  },
+  {
+   "fieldname": "measureid",
+   "fieldtype": "Link",
+   "label": "Measure ID",
+   "options": "Measure",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "measureid.measurename",
+   "fieldname": "measurename",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Measure",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-11-16 15:52:31.610988",
+ "modified": "2023-12-05 14:12:42.996849",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Process Measurement Detail",

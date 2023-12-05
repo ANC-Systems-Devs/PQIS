@@ -7,13 +7,23 @@
  "engine": "InnoDB",
  "field_order": [
   "reelqualityid",
-  "prodspecid",
+  "reelid",
+  "propertyid",
+  "property",
   "average",
   "standard_deviation",
   "mean",
+  "minimum",
+  "maximum",
   "median",
+  "column_break_clab",
+  "scanlength",
+  "scanfrequency",
+  "detailcount",
   "valuetype",
-  "value"
+  "value",
+  "section_break_hlzw",
+  "reel_quality_detail"
  ],
  "fields": [
   {
@@ -23,12 +33,6 @@
    "label": "Reel Quality ID",
    "reqd": 1,
    "unique": 1
-  },
-  {
-   "fieldname": "prodspecid",
-   "fieldtype": "Link",
-   "label": "Product Spec",
-   "options": "Prod Specs"
   },
   {
    "fieldname": "average",
@@ -65,18 +69,89 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Value Type"
+  },
+  {
+   "fieldname": "minimum",
+   "fieldtype": "Float",
+   "label": "Minimum"
+  },
+  {
+   "fieldname": "maximum",
+   "fieldtype": "Float",
+   "label": "Maximum"
+  },
+  {
+   "fieldname": "reelid",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Reel",
+   "options": "Reel"
+  },
+  {
+   "fieldname": "propertyid",
+   "fieldtype": "Link",
+   "label": "Property ID",
+   "options": "Property"
+  },
+  {
+   "fetch_from": "propertyid.property",
+   "fieldname": "property",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Property"
+  },
+  {
+   "fieldname": "column_break_clab",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "scanlength",
+   "fieldtype": "Float",
+   "label": "Scan Length"
+  },
+  {
+   "fieldname": "scanfrequency",
+   "fieldtype": "Float",
+   "label": "Scan Frequency"
+  },
+  {
+   "fieldname": "detailcount",
+   "fieldtype": "Float",
+   "label": "Detail Count"
+  },
+  {
+   "fieldname": "section_break_hlzw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reel_quality_detail",
+   "fieldtype": "Table",
+   "label": "Reel Quality Details",
+   "options": "Reel Quality Detail"
   }
  ],
  "index_web_pages_for_search": 1,
- "istable": 1,
  "links": [],
- "modified": "2023-10-20 13:11:57.569683",
+ "modified": "2023-11-22 09:58:05.668177",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Reel Quality",
  "naming_rule": "Autoincrement",
  "owner": "Administrator",
- "permissions": [],
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

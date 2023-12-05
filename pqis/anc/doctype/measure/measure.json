@@ -1,66 +1,41 @@
 {
  "actions": [],
  "autoname": "autoincrement",
- "creation": "2023-09-21 11:02:06.549278",
+ "creation": "2023-12-05 12:59:05.752304",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "propertyid",
-  "property",
-  "rt_tag",
-  "sourceid",
-  "sourcename",
-  "paperlabpropid",
-  "valuetype",
-  "units",
-  "column_break_dhqt",
+  "measureid",
+  "measurename",
+  "description",
+  "column_break_mozi",
   "active"
  ],
  "fields": [
   {
-   "fieldname": "propertyid",
+   "fieldname": "measureid",
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Property ID"
+   "label": "Measure ID"
   },
   {
-   "fieldname": "property",
+   "fieldname": "measurename",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Property"
+   "label": "Name"
   },
   {
-   "fieldname": "rt_tag",
+   "fieldname": "description",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "RT Tag"
+   "label": "Description"
   },
   {
-   "fieldname": "sourceid",
-   "fieldtype": "Link",
-   "label": "Source ID",
-   "options": "Source"
-  },
-  {
-   "fetch_from": "sourceid.sourcename",
-   "fieldname": "sourcename",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Source",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_dhqt",
+   "fieldname": "column_break_mozi",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "units",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Units"
   },
   {
    "default": "1",
@@ -68,24 +43,14 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Active"
-  },
-  {
-   "fieldname": "valuetype",
-   "fieldtype": "Data",
-   "label": "Valuetype"
-  },
-  {
-   "fieldname": "paperlabpropid",
-   "fieldtype": "Data",
-   "label": "Paperlab Prop ID"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-30 17:10:36.519143",
+ "modified": "2023-12-05 13:04:08.206491",
  "modified_by": "Administrator",
  "module": "ANC",
- "name": "Property",
+ "name": "Measure",
  "naming_rule": "Autoincrement",
  "owner": "Administrator",
  "permissions": [
@@ -147,10 +112,10 @@
    "write": 1
   }
  ],
- "search_fields": "propertyid, property, rt_tag",
+ "search_fields": "measureid, measurename, description",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "propertyid"
+ "title_field": "measureid"
 }

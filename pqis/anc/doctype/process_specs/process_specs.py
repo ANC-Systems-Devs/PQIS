@@ -8,12 +8,18 @@ from frappe.model.document import Document
 @frappe.whitelist()
 def auto_increment_id():
 	try:
-		doc = frappe.db.count('Process Specs')
-		count = doc + 1
+		doc = frappe.db.sql("""
+                SELECT
+                    next_not_cached_value
+                FROM `process_specs_id_seq`
+                """)
 
-		return {"status": "Success", "result": "{}{}".format("PSSP0", count)}
+		number = doc[0][0]
+		formatted = f'PRCSP{number:04d}'
+
+		return {"status": "Success", "message": formatted}
 	except Exception as e: 
-		return {"status": "Error", "message": "Failed to save record.", "exception": e}
+		return {"status": "Error", "message": "Failed to fetch record.", "exception": e}
 
 @frappe.whitelist()
 def auto_increment_child_id(data):
@@ -21,23 +27,12 @@ def auto_increment_child_id(data):
 		doc = frappe.db.count('Process Spec Details')
 		deserialize = json.loads(data)
 		count = len(deserialize) + doc
+		formatted = f'PRCSPDTL{count:04d}'
 
-		return {"status": "Success", "result": count}
+		return {"status": "Success", "result": formatted}
 	except Exception as e: 
 		return {"status": "Error", "message": "Failed to save record.", "exception": e}
 	
-@frappe.whitelist()
-def fetch_psdtl(data):
-	try:
-		deserialize = json.loads(data)
-		doc = frappe.db.get_all('Process Spec Details',
-						filters = deserialize,
-						fields = ['name', 'creation', 'modified', 'modified_by', 'owner', 'docstatus', 'idx', 'propertyid', 'property_name', 'time', 'target', 'parent', 'parentfield', 'parenttype', 'area', 'process_id', 'subprocess', 'units', 'prsdtl_date', 'processspecid']
-						)
-		return {"status": "Success", "message": doc}
-	except Exception as e: 
-		return {"status": "Error", "message": "Failed to save record.", "exception": e}
-
 @frappe.whitelist()
 def fetch_psdtl_subprocess(dupdata, data):
 	try:
@@ -57,51 +52,18 @@ def fetch_psdtl_subprocess(dupdata, data):
 							)
 			
 			# count child list
-			docChildCount = frappe.db.count('Process Spec Details')
-			count = docChildCount + 1
+			docChild = frappe.db.sql("""
+                SELECT
+                    next_not_cached_value
+                FROM `process_spec_details_id_seq`
+                """)
 
-			return {"status": "Success", "message": doc, "result": count}
+			number = docChild[0][0]
+			formatted = f'PRCSPDTL{number:04d}'
+
+			return {"status": "Success", "message": doc, "result": formatted}
 	except Exception as e: 
 		return {"status": "Error", "message": "Failed to save record.", "exception": e}
-	
-@frappe.whitelist()
-def save_psdtl(parent, data):
-	try:
-		frappe.db.delete("Process Spec Details", { "parent": parent })
-
-		deserialize = json.loads(data)
-		for d in deserialize:
-			doc = frappe.new_doc('Process Spec Details')
-			doc.propertyid = d.get('propertyid')
-			doc.property_name = d.get('property_name')
-			doc.time = d.get('time')
-			doc.target = d.get('target')
-			doc.parent = parent
-			doc.parentfield = d.get('parentfield')
-			doc.parenttype = d.get('parenttype')
-			doc.area = d.get('area')
-			doc.process_id = d.get('process_id')
-			doc.subprocess = d.get('subprocess')
-			doc.units = d.get('units')
-			doc.prsdtl_date = d.get('prsdtl_date')
-			doc.processspecid = d.get('processspecid')
-			doc.save()  
-			
-		return {"status": "Success", "message": deserialize}
-	except Exception as e: 
-		return {"status": "Error", "exception": e}
-	
-@frappe.whitelist()
-def fetch_weekly_rpt(data):
-	try:
-		deserialize = json.loads(data)
-		doc = frappe.db.get_all('Process Spec Details',
-						filters= deserialize,
-						fields = ['property_name', "units", 'prsdtl_date', 'time', "target"]
-						)
-		return {"status": "Success", "message": doc}
-	except Exception as e: 
-		return {"status": "Error", "message": "Failed to save record.", "exception": e}
-	
+		
 class ProcessSpecs(Document):
 	pass

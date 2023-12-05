@@ -7,12 +7,18 @@ from frappe.model.document import Document
 @frappe.whitelist()
 def auto_increment_id():
 	try:
-		doc = frappe.db.count('Property')
-		count = doc + 1
+		doc = frappe.db.sql("""
+                SELECT
+                    next_not_cached_value
+                FROM `property_id_seq`
+                """)
 
-		return {"status": "Success", "result": "{}{}".format("P0", count)}
+		number = doc[0][0]
+		formatted = f'PROP{number:04d}'
+
+		return {"status": "Success", "message": formatted}
 	except Exception as e: 
-		return {"status": "Error", "message": "Failed to save record.", "exception": e}
+		return {"status": "Error", "message": "Failed to fetch record.", "exception": e}
 
 class Property(Document):
 	pass

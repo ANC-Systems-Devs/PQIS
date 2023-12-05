@@ -10,7 +10,7 @@ frappe.ui.form.on("Property", {
                     console.log("success", response);
         
                     if (response.message.status === "Success") {
-                        frm.set_value('propertyid', response.message.result);
+                        frm.set_value('propertyid', response.message.message);
                         frm.refresh_fields('propertyid');
                         frm.set_df_property('propertyid', 'read_only', 1);
                     } else {

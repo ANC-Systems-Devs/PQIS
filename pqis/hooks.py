@@ -128,23 +128,23 @@ app_license = "mit"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
-#	"all": [
-#		"pqis.tasks.all"
-#	],
-#	"daily": [
-#		"pqis.tasks.daily"
-#	],
-#	"hourly": [
-#		"pqis.tasks.hourly"
-#	],
-#	"weekly": [
-#		"pqis.tasks.weekly"
-#	],
-#	"monthly": [
-#		"pqis.tasks.monthly"
-#	],
-# }
+scheduler_events = {
+	"all": [
+		"pqis.tasks.all"
+	],
+	"daily": [
+		"pqis.tasks.daily"
+	],
+	"hourly": [
+		"pqis.tasks.hourly"
+	],
+	"weekly": [
+		"pqis.tasks.weekly"
+	],
+	"monthly": [
+		"pqis.tasks.monthly"
+	],
+}
 
 # Testing
 # -------

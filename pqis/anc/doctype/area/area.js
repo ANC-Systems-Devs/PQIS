@@ -10,7 +10,7 @@ frappe.ui.form.on("Area", {
                     console.log("success", response);
         
                     if (response.message.status === "Success") {
-                        frm.set_value('areaid', response.message.result);
+                        frm.set_value('areaid', response.message.message);
                         frm.refresh_fields('areaid');
                         frm.set_df_property('areaid', 'read_only', 1);
                     } else {

@@ -13,6 +13,8 @@
   "processdesc",
   "column_break_bywt",
   "date",
+  "datecreated",
+  "cannot_edit",
   "section_break_llef",
   "process_measurement_details",
   "amended_from"
@@ -78,6 +80,12 @@
    "fieldtype": "Column Break"
   },
   {
+   "fieldname": "datecreated",
+   "fieldtype": "Datetime",
+   "hidden": 1,
+   "label": "Created"
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -85,13 +93,20 @@
    "options": "Process Measurement",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "cannot_edit",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Cannot Edit"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-11-16 01:45:03.687869",
+ "modified": "2023-12-01 20:52:58.047826",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Process Measurement",

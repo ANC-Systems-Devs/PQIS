@@ -13,6 +13,11 @@
   "processdesc",
   "column_break_ebim",
   "active",
+  "html_rqqf",
+  "startdate",
+  "starttime",
+  "enddate",
+  "endtime",
   "section_break_xwjr",
   "process_spec_details",
   "section_break_dvys",
@@ -99,12 +104,37 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Active"
+  },
+  {
+   "fieldname": "startdate",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "starttime",
+   "fieldtype": "Time",
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "enddate",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "endtime",
+   "fieldtype": "Time",
+   "label": "End Time"
+  },
+  {
+   "fieldname": "html_rqqf",
+   "fieldtype": "HTML",
+   "options": "<br>\n<h5>Inactive Schedule <i>(optional)<i></i></i></h5><i><i>\n<br></i></i>"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-14 10:32:42.033598",
+ "modified": "2023-11-29 20:14:26.039371",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Process Specs",

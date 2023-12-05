@@ -12,9 +12,7 @@
   "gradecodedesc",
   "buildstatus",
   "starttime",
-  "turnuptime",
-  "section_break_vbic",
-  "reel_qualities"
+  "turnuptime"
  ],
  "fields": [
   {
@@ -58,21 +56,11 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Turnup Time"
-  },
-  {
-   "fieldname": "section_break_vbic",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "reel_qualities",
-   "fieldtype": "Table",
-   "label": "Reel Quality",
-   "options": "Reel Quality"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-14 10:31:54.855114",
+ "modified": "2023-11-20 19:29:22.335315",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Reel",

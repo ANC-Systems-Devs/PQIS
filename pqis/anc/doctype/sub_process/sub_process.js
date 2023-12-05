@@ -10,16 +10,16 @@ frappe.ui.form.on("Sub Process", {
                     console.log("success", response);
         
                     if (response.message.status === "Success") {
-                        frm.set_value('subprocessid', response.message.result);
+                        frm.set_value('subprocessid', response.message.message);
                         frm.refresh_fields('subprocessid');
                         frm.set_df_property('subprocessid', 'read_only', 1);
                     } else {
-                        frappe.throw(__(`Failed to increment Sub Process Spec Id.`));
+                        frappe.throw(__(`Failed to increment Sub Process Id.`));
                     }
                 },
                 error: (r) => {
                     console.log("error", r);
-                    frappe.throw(__(`Failed to increment Sub Process Spec Id.`));
+                    frappe.throw(__(`Failed to increment Sub Process Id.`));
                 }
             });
         } 

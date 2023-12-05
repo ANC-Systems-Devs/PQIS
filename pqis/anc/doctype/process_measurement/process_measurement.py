@@ -5,33 +5,22 @@ import frappe
 import json
 from frappe.model.document import Document
 
-
 @frappe.whitelist()
 def auto_increment_id():
 	try:
-		doc = frappe.db.count('Process Measurement')
-		count = doc + 1
+		doc = frappe.db.sql("""
+                SELECT
+                    next_not_cached_value
+                FROM `process_measurement_id_seq`
+                """)
 
-		return {"status": "Success", "result": "{}{}".format("PSM0", count)}
+		number = doc[0][0]
+		formatted = f'PRCM{number:04d}'
+
+		return {"status": "Success", "message": formatted}
 	except Exception as e: 
-		return {"status": "Error", "message": "Failed to save record.", "exception": e}
+		return {"status": "Error", "message": "Failed to fetch record.", "exception": e}
 	
-@frappe.whitelist()
-def save_raw_data(data):
-	try:
-		doc = frappe.new_doc('Raw Data')
-		deserialize = json.loads(data)
-		doc.rawdataid = deserialize.get('rawdataid')
-		doc.data = deserialize.get('data')
-		doc.datetime = deserialize.get('datetime')
-		doc.sourceid = 7
-		doc.sourcename = deserialize.get('sourcename')
-		doc.status = deserialize.get('status')
-		doc.save()  
-		return {"status": "Success", "message": "Successfully saved the raw data record."}
-	except Exception as e: 
-		return {"status": "Error", "message": "Failed to save record.", "exception": e}
-
 @frappe.whitelist()
 def fetch_processspec_for_color(data):
 	try:
@@ -41,7 +30,7 @@ def fetch_processspec_for_color(data):
 		# child table
 		docChild = frappe.db.get_all('Process Spec Details',
 						filters = { 'parent': doc, 'active': 1 },
-						fields = ['name', 'subprocessid', 'propertyid', 'lc', 'll', 'tgt', 'hl', 'hc']
+						fields = ['name', 'subprocessid', 'propertyid', 'lr', 'lc', 'll', 'tgt', 'hl', 'hc', 'hr']
 						)
 		return {"status": "Success", "message": docChild}
 	except Exception as e: 
@@ -52,11 +41,13 @@ def fetch_processspec(data, firstDate, secondDate):
 	try:
 		deserialize = json.loads(data)
 		doc = frappe.db.get_value('Process Specs', deserialize, 'name')
+		docParent = frappe.db.get_value('Process Specs', deserialize, ['name', 'areaid', 'processid', 'startdate', 'starttime', 'enddate', 'endtime'])
 		
 		# child table
 		docChild = frappe.db.get_all('Process Spec Details',
 						filters = { 'parent': doc, 'active': 1 },
-						fields = ['name', 'subprocessid', 'subprocess', 'propertyid', 'property_name', 'tag', 'units']
+						fields = ['name', 'subprocessid', 'subprocess', 'propertyid', 'property_name', 'tag', 'units', 'measureid' , 'measurename', 'seq'],
+						order_by='seq asc',
 						)
 
 		# count child list
@@ -76,7 +67,7 @@ def fetch_processspec(data, firstDate, secondDate):
 		else:
 			prevChild = frappe.db.get_all('Process Measurement Detail',
 							filters = { 'parent': prevParent[0].get('name') },
-							fields = ['subprocessid', 'propertyid', 'value']
+							fields = ['subprocessid', 'propertyid', 'value', 'is_null']
 							)
 		
 		# previous 2nd value
@@ -92,26 +83,12 @@ def fetch_processspec(data, firstDate, secondDate):
 		else:
 			prev2ndChild = frappe.db.get_all('Process Measurement Detail',
 							filters = { 'parent': prev2ndParent[0].get('name') },
-							fields = ['subprocessid', 'propertyid', 'value']
+							fields = ['subprocessid', 'propertyid', 'value', 'is_null']
 							)
 		
-		return {"status": "Success", "message": docChild, "result": count, "firstprev": prevChild, "secondprev": prev2ndChild}
+		return {"status": "Success", "parent": docParent, "message": docChild, "result": count, "firstprev": prevChild, "secondprev": prev2ndChild}
 	except Exception as e: 
 		return {"status": "Error", "message": "Failed to save record.", "exception": e}
 	
-@frappe.whitelist()
-def update_psm_parent_child_id(parentId, data):
-	try:
-		doc = frappe.db.set_value('Process Measurement', parentId, 'processmeasurementid', parentId, update_modified=False)
-
-		# child table
-		deserialize = json.loads(data)
-		for d in deserialize:
-			frappe.db.set_value('Process Measurement Detail', d.get('name'), 'processmeasurementdtlid', d.get('name'), update_modified=False)
-		
-		return {"status": "Success"}
-	except Exception as e: 
-		return {"status": "Error", "message": "Failed to save record.", "exception": e}
-
 class ProcessMeasurement(Document):
 	pass
