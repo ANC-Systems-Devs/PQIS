@@ -316,7 +316,7 @@ function fetchChildList(frm) {
                             property: item.property_name,
                             tag: item.tag,
                             units: item.units,
-                            measureid: item.measureid,
+                            measureid: item.measureid == null ? "null" : item.measureid,
                             measurename: item.measurename,
                             value: undefined,
                             is_null: "Null",
