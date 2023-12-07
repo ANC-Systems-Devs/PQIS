@@ -6,10 +6,10 @@ frappe.ui.form.on("Irene", {
         frappe.call({
             method: 'pqis.redvelvet.doctype.irene.irene.getrole',
             callback: function(response) {
-                    console.log("erika", response);
+                    console.log("data here", response);
             },
             error: (r) => {
-                    console.log("erika", r);
+                    console.log("data here", r);
             }
         });
 	},

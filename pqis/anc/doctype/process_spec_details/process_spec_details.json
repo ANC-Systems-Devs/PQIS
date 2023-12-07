@@ -25,7 +25,12 @@
   "column_break_auop",
   "active",
   "measureid",
-  "measurename"
+  "measurename",
+  "html_wdxb",
+  "startdate",
+  "starttime",
+  "enddate",
+  "endtime"
  ],
  "fields": [
   {
@@ -162,12 +167,37 @@
    "in_list_view": 1,
    "label": "Measure",
    "read_only": 1
+  },
+  {
+   "fieldname": "startdate",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "starttime",
+   "fieldtype": "Time",
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "enddate",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "endtime",
+   "fieldtype": "Time",
+   "label": "End Time"
+  },
+  {
+   "fieldname": "html_wdxb",
+   "fieldtype": "HTML",
+   "options": "<br>\n<h5><i>Inactive Schedule</i></h5>\n<br>"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-05 15:57:31.234660",
+ "modified": "2023-12-07 14:17:50.587616",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Process Spec Details",

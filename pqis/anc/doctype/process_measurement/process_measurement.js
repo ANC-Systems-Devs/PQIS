@@ -6,6 +6,8 @@ frappe.ui.form.on("Process Measurement", {
         $('*[data-fieldname="process_measurement_details"]').find('button.grid-add-row').addClass('hide');
 
         if (frm.is_new()) {
+            frm.enable_save();
+
             frm.set_value('workflow_state_psm', "Not Saved");
             frm.refresh_fields('workflow_state_psm');
 
@@ -37,6 +39,8 @@ frappe.ui.form.on("Process Measurement", {
                 }
             });
         } else {
+            frm.enable_save();
+
             const colorParam = {
                 'areaid': frm.doc.areaid,
                 'processid': frm.doc.processid
@@ -56,34 +60,35 @@ frappe.ui.form.on("Process Measurement", {
                                     let colorItem = colorValue.filter(v => parseInt(v.subprocessid) === parseInt(item.subprocessid) && parseInt(v.propertyid) === parseInt(item.propertyid));
 
                                     if (colorItem.length !== 0) {
-                                        // black
-                                        if (item.value >= colorItem[0].ll && item.value <= colorItem[0].hl) {
-                                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"]').css({'background-color': '#21130d'});
-                                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').css({'font-weight': 'bold'}).css({'color': '#FFFFFF'});
+                                        if (item.is_null !== "Null") {
+                                            // black
+                                            if (item.value >= colorItem[0].ll && item.value <= colorItem[0].hl) {
+                                                $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"]').css({'background-color': '#21130d'});
+                                                $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').css({'font-weight': 'bold'}).css({'color': '#FFFFFF'});
+                                            }
+
+                                            // blue
+                                            if ((item.value >= colorItem[0].lc && item.value < colorItem[0].ll) || (item.value > colorItem[0].hl && item.value <= colorItem[0].hc)) {
+                                                $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"]').css({'background-color': '#0e7bae'});
+                                                $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').css({'font-weight': 'bold'}).css({'color': '#FFFFFF'});
+                                            } 
+                                            
+                                            // red
+                                            if (item.value < colorItem[0].lc || item.value > colorItem[0].hc) {
+                                                $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"]').css({'background-color': '#C70039'});
+                                                $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').css({'font-weight': 'bold'}).css({'color': '#FFFFFF'});
+                                            }
+
+                                            // purple
+                                            if (item.value < colorItem[0].lr || item.value > colorItem[0].hr) {
+                                                $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"]').css({'background-color': '#9575cd'});
+                                                $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').css({'font-weight': 'bold'}).css({'color': '#FFFFFF'});
+                                            }
                                         }
 
-                                        // blue
-                                        if ((item.value >= colorItem[0].lc && item.value < colorItem[0].ll) || (item.value > colorItem[0].hl && item.value <= colorItem[0].hc)) {
-                                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"]').css({'background-color': '#0e7bae'});
-                                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').css({'font-weight': 'bold'}).css({'color': '#FFFFFF'});
-                                        } 
-                                        
-                                        // red
-                                        if (item.value < colorItem[0].lc || item.value > colorItem[0].hc) {
-                                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"]').css({'background-color': '#C70039'});
-                                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').css({'font-weight': 'bold'}).css({'color': '#FFFFFF'});
+                                        if (item.is_null === "Null") {
+                                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').html("null");
                                         }
-
-                                        // purple
-                                        if (item.value < colorItem[0].lr || item.value > colorItem[0].hr) {
-                                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"]').css({'background-color': '#9575cd'});
-                                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').css({'font-weight': 'bold'}).css({'color': '#FFFFFF'});
-                                        }
-                                    }
-
-                                    if (item.is_null === "Null") {
-                                        $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').html("null");
-                                        $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').css({'color': '#21130d'});
                                     }
                                 });
                             }
@@ -174,6 +179,10 @@ frappe.ui.form.on("Process Measurement", {
         }
 	},
 
+    process_measurement_details(frm) {
+
+    },
+    
     onload(frm, cdt, cdn) {
         // for process link
         frm.set_query("processid", function() {
@@ -195,31 +204,27 @@ frappe.ui.form.on("Process Measurement", {
     },
 
     areaid(frm) {
-        frm.set_value('processid', "");
-        frm.refresh_fields('processid');
-        frm.set_value('processdesc', "");
-        frm.refresh_fields('processdesc');
+        frm.enable_save();
 
         cur_frm.clear_table("process_measurement_details"); 
         cur_frm.refresh_fields("process_measurement_details");
+
+        frm.set_value('processid', undefined);
+        frm.refresh_fields('processid');
+        frm.set_value('processdesc', undefined);
+        frm.refresh_fields('processdesc');
     },
 
     processid(frm) {
-        cur_frm.clear_table("process_measurement_details"); 
-        cur_frm.refresh_fields("process_measurement_details");
+        frm.enable_save();
 
-        if (frm.doc.areaid != undefined && frm.doc.processid != undefined) {
-            fetchChildList(frm);
-        }
+        fetchChildList(frm, cur_frm);
     },
 
     date(frm) {
-        if (frm.doc.areaid != undefined && frm.doc.processid != undefined) {
-            cur_frm.clear_table("process_measurement_details"); 
-            cur_frm.refresh_fields("process_measurement_details");
+        frm.enable_save();
 
-            fetchChildList(frm);
-        }
+        fetchChildList(frm, cur_frm);
     },
 
     process_measurement_details_on_form_rendered(frm, cdt, cdn) {
@@ -248,119 +253,119 @@ frappe.ui.form.on("Process Measurement", {
     }
 });
 
-function fetchChildList(frm) {
-    frm.call({
-        method: 'pqis.anc.doctype.process_measurement.process_measurement.fetch_processspec',
-        args: { 'data':  JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'active': 1}),
-                'firstDate': JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'date': frappe.datetime.add_days(frm.doc.date, -1), 'workflow_state_psm': "Entered"}),
-                'secondDate': JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'date': frappe.datetime.add_days(frm.doc.date, -2), 'workflow_state_psm': "Entered"})
-              },
-        callback: function(response) {
-            console.log("success", response);
+frappe.ui.form.on('Process Measurement Detail', {
+    value(frm, cdt, cdn) {
+        let item = locals[cdt][cdn];
+ 
+        if (item.value == null) {
+            item.is_null = "Null";
+            item.value = undefined;
+        } else {
+            item.is_null = "";
+        }
+        
+        frm.refresh_field('process_measurement_details');
+    }
+ });
 
-            let isActive = false;
-            let withDate = false;
-            const currentDate = frappe.datetime.get_today();
-            const currentTime = frappe.datetime.now_time();
+function fetchChildList(frm, cur_frm) {
+    if (frm.doc.areaid != undefined && frm.doc.processid != undefined) {
+        cur_frm.clear_table("process_measurement_details"); 
+        cur_frm.refresh_fields("process_measurement_details");
 
-            if (response.message.status === "Success") {
-                let count = response.message.result;
+        frm.call({
+            method: 'pqis.anc.doctype.process_measurement.process_measurement.fetch_processspec',
+            args: { 'data':  JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'active': 1, 'workflow_state_pssp': ['!=', 'Draft']}),
+                    'firstDate': JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'date': frappe.datetime.add_days(frm.doc.date, -1), 'workflow_state_psm': "Entered"}),
+                    'secondDate': JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'date': frappe.datetime.add_days(frm.doc.date, -2), 'workflow_state_psm': "Entered"})
+                },
+            callback: function(response) {
+                console.log("success", response);
 
-                // validate if area and process combination is inactive between given time and date
+                const currentDate = frm.doc.date;
+                const currentTime = frappe.datetime.now_time();
 
-                if (response.message.parent[3] == null && response.message.parent[4] == null && response.message.parent[5] == null && response.message.parent[6] == null) {
-                    isActive = true;
-                } else {
-                    if (response.message.parent[3] == null && response.message.parent[5] == null) {
-                        if (currentTime >= response.message.parent[4] && currentTime <= response.message.parent[6]) {
-                            isActive = false;
-                        }
-                    } else if (response.message.parent[4] == null && response.message.parent[6] == null) {
-                        if (currentDate >= response.message.parent[3] && currentDate <= response.message.parent[5]) {
-                            isActive = false;
-                        }
+                if (response.message.status === "Success") {
+                    let count = response.message.result;
 
-                        withDate = true;
-                    } else {
-                        if ((currentDate >= response.message.parent[3] && currentDate <= response.message.parent[5]) && (currentTime >= response.message.parent[4] && currentTime <= response.message.parent[6])) {
-                            isActive = false;
-                        }
-
-                        withDate = true;
-                    }
-                }
-                
-
-                if (isActive) {
-                    response.message.message.map((item) => { 
-                        let prevValue = "";
-                        let prev2ndValue = "";
-
-                        if (response.message.firstprev.length !== 0) {
-                            let list = response.message.firstprev.filter(v => parseInt(v.subprocessid) === parseInt(item.subprocessid) && parseInt(v.propertyid) === parseInt(item.propertyid));
-                            prevValue = list[0].is_null === "Null" ? "null" : list[0].value;
-                        }
-
-                        if (response.message.secondprev.length !== 0) {
-                            let secondList = response.message.secondprev.filter(v => parseInt(v.subprocessid) === parseInt(item.subprocessid) && parseInt(v.propertyid) === parseInt(item.propertyid));
-                            prev2ndValue = secondList[0].is_null === "Null" ? "null" : secondList[0].value;
-                        }
-
-                        let formattedString = String(count++).padStart(4, '0');
-
-                        frm.add_child('process_measurement_details', {
-                            processmeasurementdtlid: `PRCMDTL0${formattedString}`,
-                            subprocessid: item.subprocessid,
-                            subprocessdesc: item.subprocess,
-                            propertyid: item.propertyid,
-                            property: item.property_name,
-                            tag: item.tag,
-                            units: item.units,
-                            measureid: item.measureid == null ? "null" : item.measureid,
-                            measurename: item.measurename,
-                            value: undefined,
-                            is_null: "Null",
-                            prev_value_first: prevValue,
-                            prev_value_second: prev2ndValue
-                        });
-                    });
-
-                    frm.refresh_fields("process_measurement_details");
-
-                    $.each(cur_frm.doc["process_measurement_details"], function(i, item) {
-                        $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').html("null");
-                    });
-
-                    $("div[data-fieldname=process_measurement_details]").find(`div.grid-heading-row`).find('.grid-static-col').css('height', '50px');
-                    $("div[data-fieldname=process_measurement_details]").find(`div.grid-heading-row`).find('.grid-static-col[title="Previous Date Value"]').find('.static-area').html(`<p>Previous Date Value<br>(${frappe.datetime.add_days(frm.doc.date, -1)})</p>`);
-                    $("div[data-fieldname=process_measurement_details]").find(`div.grid-heading-row`).find('.grid-static-col[title="Previous Second Date Value"]').find('.static-area').html(`<p>Previous Date Second Value<br>(${frappe.datetime.add_days(frm.doc.date, -2)})</p>`);                
-                } else {
-                    if (withDate) {
+                    if (response.message.parent == null) {
                         frappe.msgprint({
                             title: __('Warning'),
                             indicator: 'red',
-                            message: __(`Area ${frm.doc.areaid} and Process ${frm.doc.processid} combination is inactive between ${response.message.parent[3]} ${response.message.parent[4]} and ${response.message.parent[5]} ${response.message.parent[6]}.`)
+                            message: __(`Area ${frm.doc.areaid} and Process ${frm.doc.processid} combination is still in Draft state.`)
                         });
-                    } else {
-                        frappe.msgprint({
-                            title: __('Warning'),
-                            indicator: 'red',
-                            message: __(`Area ${frm.doc.areaid} and Process ${frm.doc.processid} combination is inactive between ${response.message.parent[4]} and ${response.message.parent[6]}.`)
-                        });
-                    }
 
-                    frm.set_value('processid', "");
-                    frm.refresh_fields('processid');
-                    frm.set_value('processdesc', "");
-                    frm.refresh_fields('processdesc');
+                        frm.disable_save();
+                    } else {
+                        response.message.message.map((item) => {
+                            let canAddChild = true;
+                            
+                            if (item.startdate == null && item.enddate == null) {
+                                if (currentTime >= item.starttime && currentTime < item.endtime) {
+                                    canAddChild = false;
+                                }
+                            } else if (item.starttime == null && item.endtime == null) {
+                                if (currentDate >= item.startdate && currentDate <= item.enddate) {
+                                    canAddChild = false;
+                                }
+                            } else {
+                                if ((currentDate >= item.startdate && currentDate <= item.enddate) || (currentTime >= item.starttime && currentTime <= item.endtime)) {
+                                    canAddChild = false;
+                                }
+                            }
+                            
+                            if (canAddChild) {
+                                let prevValue = "";
+                                let prev2ndValue = "";
+
+                                if (response.message.firstprev.length !== 0) {
+                                    let list = response.message.firstprev.filter(v => parseInt(v.subprocessid) === parseInt(item.subprocessid) && parseInt(v.propertyid) === parseInt(item.propertyid));
+                                    prevValue = list[0].is_null === "Null" ? "null" : list[0].value;
+                                }
+
+                                if (response.message.secondprev.length !== 0) {
+                                    let secondList = response.message.secondprev.filter(v => parseInt(v.subprocessid) === parseInt(item.subprocessid) && parseInt(v.propertyid) === parseInt(item.propertyid));
+                                    prev2ndValue = secondList[0].is_null === "Null" ? "null" : secondList[0].value;
+                                }
+
+                                let formattedString = String(count++).padStart(4, '0');
+
+                                frm.add_child('process_measurement_details', {
+                                    processmeasurementdtlid: `PRCMDTL0${formattedString}`,
+                                    subprocessid: item.subprocessid,
+                                    subprocessdesc: item.subprocess,
+                                    propertyid: item.propertyid,
+                                    property: item.property_name,
+                                    tag: item.tag,
+                                    units: item.units,
+                                    measureid: item.measureid == null ? "null" : item.measureid,
+                                    measurename: item.measurename,
+                                    value: undefined,
+                                    is_null: "Null",
+                                    prev_value_first: prevValue,
+                                    prev_value_second: prev2ndValue
+                                });
+                            }
+                        });
+
+                        frm.refresh_fields("process_measurement_details");
+
+                        $.each(cur_frm.doc["process_measurement_details"], function(i, item) {
+                            $("div[data-fieldname=process_measurement_details]").find(`div.grid-row[data-idx=${item.idx}]`).find('.grid-static-col[data-fieldname="value"] div[class="static-area ellipsis"] div').html("null");
+                        });
+
+                        $("div[data-fieldname=process_measurement_details]").find(`div.grid-heading-row`).find('.grid-static-col').css('height', '50px');
+                        $("div[data-fieldname=process_measurement_details]").find(`div.grid-heading-row`).find('.grid-static-col[title="Previous Date Value"]').find('.static-area').html(`<p>Previous Date Value<br>(${frappe.datetime.add_days(frm.doc.date, -1)})</p>`);
+                        $("div[data-fieldname=process_measurement_details]").find(`div.grid-heading-row`).find('.grid-static-col[title="Previous Second Date Value"]').find('.static-area').html(`<p>Previous Date Second Value<br>(${frappe.datetime.add_days(frm.doc.date, -2)})</p>`);
+                    }
+                } else {
+                    frappe.throw(__(`Failed to fetch Process Spec records.`));
                 }
-            } else {
+            },
+            error: (r) => {
+                console.log("error", r);
                 frappe.throw(__(`Failed to fetch Process Spec records.`));
             }
-        },
-        error: (r) => {
-            console.log("error", r);
-            frappe.throw(__(`Failed to fetch Process Spec records.`));
-        }
-    });
+        });
+    }
 }

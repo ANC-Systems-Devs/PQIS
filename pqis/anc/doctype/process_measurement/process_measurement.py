@@ -41,12 +41,12 @@ def fetch_processspec(data, firstDate, secondDate):
 	try:
 		deserialize = json.loads(data)
 		doc = frappe.db.get_value('Process Specs', deserialize, 'name')
-		docParent = frappe.db.get_value('Process Specs', deserialize, ['name', 'areaid', 'processid', 'startdate', 'starttime', 'enddate', 'endtime'])
+		docParent = frappe.db.get_value('Process Specs', deserialize, ['name', 'areaid', 'processid'])
 		
 		# child table
 		docChild = frappe.db.get_all('Process Spec Details',
 						filters = { 'parent': doc, 'active': 1 },
-						fields = ['name', 'subprocessid', 'subprocess', 'propertyid', 'property_name', 'tag', 'units', 'measureid' , 'measurename', 'seq'],
+						fields = ['name', 'subprocessid', 'subprocess', 'propertyid', 'property_name', 'tag', 'units', 'measureid' , 'measurename', 'seq', 'startdate', 'starttime', 'enddate', 'endtime'],
 						order_by='seq asc',
 						)
 

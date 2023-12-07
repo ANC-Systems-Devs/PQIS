@@ -19,6 +19,8 @@ frappe.ui.form.on("Process Specs", {
             frm.set_value('workflow_state_pssp', "Not Saved");
             frm.refresh_fields('workflow_state_pssp');
             
+            $('*[data-fieldname="process_spec_details"]').hide();
+
             frm.call({
                 method: 'pqis.anc.doctype.process_specs.process_specs.auto_increment_id',
                 callback: function(response) {
@@ -38,21 +40,15 @@ frappe.ui.form.on("Process Specs", {
                 }
             });
         }
+
+        if (frm.doc.editted === 0 && frm.doc.workflow_state_pssp === "Entered") {
+            $('.actions-btn-group').hide();
+        } else {
+            $('.actions-btn-group').show();
+        }
 	},
 
     onload(frm) {
-        if (frm.doc.workflow_state_pssp === "Entered") {
-            frm.set_df_property('areaid', 'read_only', 1);
-            frm.set_df_property('processid', 'read_only', 1);
-
-            $('*[data-fieldname="process_spec_details"]').find('.grid-add-row').hide();
-            frm.set_df_property('process_spec_details', 'read_only', 1);
-
-            if (frm.doc.startdate == null && frm.doc.starttime == null && frm.doc.enddate == null && frm.doc.endtime == null) {
-                $('*[data-fieldname="html_rqqf"]').hide();
-            }
-        }
-        
         // for process link
         frm.set_query("processid", function() {
             return {
@@ -73,18 +69,20 @@ frappe.ui.form.on("Process Specs", {
     },
 
     areaid(frm) {
-        frm.set_value('processid', "");
+        frm.set_value('processid', undefined);
         frm.refresh_fields('processid');
 
         cur_frm.clear_table("process_spec_details"); 
         cur_frm.refresh_fields("process_spec_details");
+
+        $('*[data-fieldname="process_spec_details"]').hide();
     },
 
     processid(frm) {
         cur_frm.clear_table("process_spec_details"); 
         cur_frm.refresh_fields("process_spec_details");
 
-        if (frm.doc.processid !== "") {
+        if (frm.doc.areaid != undefined && frm.doc.processid != undefined) {
             const fetchDupParam = {
                                     'areaid': frm.doc.areaid,
                                     'processid': frm.doc.processid,
@@ -105,37 +103,44 @@ frappe.ui.form.on("Process Specs", {
                     console.log("success", response);
         
                     if (response.message.status === "Duplicate") {
-                        frm.set_value('areaid', "");
-                        frm.refresh_fields('areaid');
-
-                        frm.set_value('processid', "");
-                        frm.set_value('processdesc', "");
-                        frm.refresh_fields('processid');
-                        frm.refresh_fields('processdesc');
-
                         frappe.msgprint({
                             title: __('Warning'),
                             indicator: 'red',
                             message: __(`Area ${frm.doc.areaid} and Process ${frm.doc.processid} combination already exists in ${response.message.id}.`)
                         });
 
-                    } else if (response.message.status === "Success") {
-                        if (response.message.message.length === 1) {
-                            subprocess = response.message.message[0].name;
-                            subprocessDesc = response.message.message[0].description;
-                        } else {
-                            subprocess = "";
-                            subprocessDesc = "";
-                        }
+                        frm.set_value('areaid', undefined);
+                        frm.refresh_fields('areaid');
 
-                        response.message.message.map((item) => {    
-                            frm.add_child('process_spec_details', {
-                                processspecdtlid: response.message.result,
-                                subprocessid: item.name,
-                                subprocess: item.description
+                        frm.set_value('processid', undefined);
+                        frm.set_value('processdesc', "");
+                        frm.refresh_fields('processid');
+                        frm.refresh_fields('processdesc');
+
+                        $('*[data-fieldname="process_spec_details"]').hide();
+                    } else if (response.message.status === "Success") {
+                        if (response.message.message.length === 0) {
+                            $('*[data-fieldname="process_spec_details"]').hide();
+                        } else {
+                            $('*[data-fieldname="process_spec_details"]').show();
+
+                            if (response.message.message.length === 1) {
+                                subprocess = response.message.message[0].name;
+                                subprocessDesc = response.message.message[0].description;
+                            } else {
+                                subprocess = "";
+                                subprocessDesc = "";
+                            }
+
+                            response.message.message.map((item) => {    
+                                frm.add_child('process_spec_details', {
+                                    processspecdtlid: response.message.result,
+                                    subprocessid: item.name,
+                                    subprocess: item.description
+                                });
+                                frm.refresh_fields("process_spec_details");
                             });
-                            frm.refresh_fields("process_spec_details");
-                        });
+                        }
                     } else {
                         frappe.throw(__(`Failed to fetch Sub Process records.`));
                     }
@@ -152,6 +157,11 @@ frappe.ui.form.on("Process Specs", {
         if (frm.doc.workflow_state_pssp === "Not Saved") {
             frm.set_value('workflow_state_pssp', "Draft");
             frm.refresh_fields('workflow_state_pssp');
+        }
+
+        if (frm.doc.workflow_state_pssp === "Entered") {
+            frm.set_value('editted', 1);
+            frm.refresh_fields('editted');
         }
     }
 });
@@ -179,5 +189,17 @@ frappe.ui.form.on('Process Spec Details', {
             item.subprocessid = subprocess;
             item.subprocess = subprocessDesc;
         }
-    }
+    },
+
+    seq(frm, cdt, cdn) {
+        let item = locals[cdt][cdn];
+
+        const count = frm.doc.process_spec_details.filter(x => parseInt(x.seq) === parseInt(item.seq));
+
+        if (count.length >= 2) {
+            item.seq = "";
+        }
+
+        frm.refresh_field('process_spec_details');
+    },
 });

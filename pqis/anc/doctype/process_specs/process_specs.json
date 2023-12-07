@@ -13,18 +13,9 @@
   "processdesc",
   "column_break_ebim",
   "active",
-  "html_rqqf",
-  "startdate",
-  "starttime",
-  "enddate",
-  "endtime",
+  "editted",
   "section_break_xwjr",
-  "process_spec_details",
-  "section_break_dvys",
-  "column_break_ikkt",
-  "html_ztrj",
-  "column_break_yvzy",
-  "html_nzrn"
+  "process_spec_details"
  ],
  "fields": [
   {
@@ -35,23 +26,7 @@
    "label": "Process Spec ID"
   },
   {
-   "fieldname": "section_break_dvys",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "html_ztrj",
-   "fieldtype": "HTML"
-  },
-  {
-   "fieldname": "column_break_ikkt",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "column_break_ebim",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_yvzy",
    "fieldtype": "Column Break"
   },
   {
@@ -59,10 +34,6 @@
    "fieldtype": "Table",
    "label": "Process Spec Details",
    "options": "Process Spec Details"
-  },
-  {
-   "fieldname": "html_nzrn",
-   "fieldtype": "HTML"
   },
   {
    "fieldname": "areaid",
@@ -106,35 +77,17 @@
    "label": "Active"
   },
   {
-   "fieldname": "startdate",
-   "fieldtype": "Date",
-   "label": "Start Date"
-  },
-  {
-   "fieldname": "starttime",
-   "fieldtype": "Time",
-   "label": "Start Time"
-  },
-  {
-   "fieldname": "enddate",
-   "fieldtype": "Date",
-   "label": "End Date"
-  },
-  {
-   "fieldname": "endtime",
-   "fieldtype": "Time",
-   "label": "End Time"
-  },
-  {
-   "fieldname": "html_rqqf",
-   "fieldtype": "HTML",
-   "options": "<br>\n<h5>Inactive Schedule <i>(optional)<i></i></i></h5><i><i>\n<br></i></i>"
+   "default": "0",
+   "fieldname": "editted",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Editted"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-29 20:14:26.039371",
+ "modified": "2023-12-07 13:07:20.253542",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Process Specs",
