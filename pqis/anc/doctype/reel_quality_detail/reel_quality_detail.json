@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-11-20 19:09:26.440444",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "paperlab_detail_id",
+  "position",
+  "position_value"
+ ],
+ "fields": [
+  {
+   "fieldname": "paperlab_detail_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Paperlab Detail ID"
+  },
+  {
+   "fieldname": "position",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Position"
+  },
+  {
+   "fieldname": "position_value",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Position Value"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-11-22 09:55:57.793054",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Reel Quality Detail",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

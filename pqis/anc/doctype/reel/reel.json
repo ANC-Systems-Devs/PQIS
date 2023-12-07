@@ -1,0 +1,77 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-09-20 22:21:36.778773",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reelid",
+  "gradecode",
+  "gradecodedesc",
+  "buildstatus",
+  "starttime",
+  "turnuptime"
+ ],
+ "fields": [
+  {
+   "fieldname": "reelid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Reel ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "gradecode",
+   "fieldtype": "Link",
+   "label": "Grade Code",
+   "options": "Grade"
+  },
+  {
+   "fetch_from": "gradecode.gradecodedesc",
+   "fieldname": "gradecodedesc",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Grade",
+   "read_only": 1
+  },
+  {
+   "fieldname": "buildstatus",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Build Status",
+   "options": "Pending\nComplete"
+  },
+  {
+   "fieldname": "starttime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Start Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "turnuptime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Turnup Time"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-20 19:29:22.335315",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Reel",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "search_fields": "reelid",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "reelid",
+ "track_changes": 1
+}

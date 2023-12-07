@@ -1,0 +1,134 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-12-05 13:22:00.370886",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "propertymeasureid",
+  "propertyid",
+  "property",
+  "tag",
+  "measureid",
+  "measurename"
+ ],
+ "fields": [
+  {
+   "fieldname": "propertymeasureid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Property Measure ID"
+  },
+  {
+   "fieldname": "propertyid",
+   "fieldtype": "Link",
+   "label": "Property ID",
+   "options": "Property"
+  },
+  {
+   "fetch_from": "propertyid.property",
+   "fieldname": "property",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Property",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "propertyid.rt_tag",
+   "fieldname": "tag",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tag",
+   "read_only": 1
+  },
+  {
+   "fieldname": "measureid",
+   "fieldtype": "Link",
+   "label": "Measure ID",
+   "options": "Measure"
+  },
+  {
+   "fetch_from": "measureid.measurename",
+   "fieldname": "measurename",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Measure",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-05 13:30:42.835459",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Property Measure",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Viewer",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Configuration Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "propertymeasureid, property, measurename",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "propertymeasureid"
+}

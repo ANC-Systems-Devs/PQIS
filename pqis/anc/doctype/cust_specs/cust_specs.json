@@ -1,0 +1,166 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-09-21 11:05:30.555987",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "custspecid",
+  "gradecode",
+  "gradecodedesc",
+  "custid",
+  "cust_name",
+  "date",
+  "version",
+  "column_break_lyzj",
+  "active",
+  "section_break_kcpg",
+  "customer_spec_detail"
+ ],
+ "fields": [
+  {
+   "fieldname": "custspecid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer Spec ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "gradecode",
+   "fieldtype": "Link",
+   "label": "Grade Code",
+   "options": "Grade"
+  },
+  {
+   "fetch_from": "gradecode.gradecodedesc",
+   "fieldname": "gradecodedesc",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Grade",
+   "read_only": 1
+  },
+  {
+   "fieldname": "custid",
+   "fieldtype": "Link",
+   "label": "Customer ID",
+   "options": "Customer"
+  },
+  {
+   "fetch_from": "custid.cust_name",
+   "fieldname": "cust_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date"
+  },
+  {
+   "fieldname": "version",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Version"
+  },
+  {
+   "fieldname": "column_break_lyzj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "fieldname": "section_break_kcpg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "customer_spec_detail",
+   "fieldtype": "Table",
+   "label": "Customer Spec Details",
+   "options": "Cust Spec Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-14 10:28:16.124596",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Cust Specs",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Viewer",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Configuration Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "custspecid",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "custspecid"
+}

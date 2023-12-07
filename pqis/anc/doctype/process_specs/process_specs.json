@@ -1,0 +1,159 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-10-04 16:44:33.584376",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "processspecid",
+  "areaid",
+  "areadesc",
+  "processid",
+  "processdesc",
+  "column_break_ebim",
+  "active",
+  "editted",
+  "section_break_xwjr",
+  "process_spec_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "processspecid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Process Spec ID"
+  },
+  {
+   "fieldname": "column_break_ebim",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "process_spec_details",
+   "fieldtype": "Table",
+   "label": "Process Spec Details",
+   "options": "Process Spec Details"
+  },
+  {
+   "fieldname": "areaid",
+   "fieldtype": "Link",
+   "label": "Area ID",
+   "options": "Area",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "areaid.description",
+   "fieldname": "areadesc",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Area",
+   "read_only": 1
+  },
+  {
+   "fieldname": "processid",
+   "fieldtype": "Link",
+   "label": "Process ID",
+   "options": "Process",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "processid.processdesc",
+   "fieldname": "processdesc",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Process",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_xwjr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "default": "0",
+   "fieldname": "editted",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Editted"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-07 13:07:20.253542",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Process Specs",
+ "naming_rule": "Autoincrement",
+ "nsm_parent_field": "parent_process_specs",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Viewer",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operator",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Configuration Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "processspecid, areadesc, processdesc",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "processspecid"
+}

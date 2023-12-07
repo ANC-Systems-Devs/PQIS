@@ -1,0 +1,201 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": ".#####",
+ "creation": "2023-09-27 14:00:58.234958",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "company",
+  "requestedby",
+  "legalname",
+  "chequeissuancename",
+  "currency",
+  "gstregistration",
+  "paymentterms",
+  "column_break_puot",
+  "date",
+  "contact_information_section",
+  "street",
+  "city",
+  "state",
+  "zip",
+  "firstcontactname",
+  "secondcontactname",
+  "mainphone",
+  "fax",
+  "mainemail",
+  "email_contact"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "max_height": "50px",
+   "reqd": 1
+  },
+  {
+   "fieldname": "requestedby",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "Requested By",
+   "max_height": "50px",
+   "reqd": 1
+  },
+  {
+   "fieldname": "legalname",
+   "fieldtype": "Text",
+   "in_list_view": 1,
+   "label": "Legal Name",
+   "max_height": "50px",
+   "reqd": 1
+  },
+  {
+   "fieldname": "chequeissuancename",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Cheque Issuance Name"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Currency",
+   "options": "CAD\nUSD"
+  },
+  {
+   "fieldname": "gstregistration",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "GST Registration #"
+  },
+  {
+   "fieldname": "paymentterms",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Payment Terms"
+  },
+  {
+   "fieldname": "column_break_puot",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contact_information_section",
+   "fieldtype": "Section Break",
+   "label": "Contact Information"
+  },
+  {
+   "fieldname": "street",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Street"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "City"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Province/State"
+  },
+  {
+   "fieldname": "zip",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Postal/Zip"
+  },
+  {
+   "fieldname": "firstcontactname",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Contact Name (1)"
+  },
+  {
+   "fieldname": "secondcontactname",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Contact Name (2)"
+  },
+  {
+   "fieldname": "mainphone",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Main Phone",
+   "length": 11,
+   "non_negative": 1
+  },
+  {
+   "fieldname": "fax",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Fax",
+   "length": 11,
+   "non_negative": 1
+  },
+  {
+   "fieldname": "mainemail",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email (Main)"
+  },
+  {
+   "fieldname": "email_contact",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email (Contact)"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-14 10:29:09.779931",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Vendor Request",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

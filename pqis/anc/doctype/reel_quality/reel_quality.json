@@ -1,0 +1,158 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-10-05 08:43:10.849539",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reelqualityid",
+  "reelid",
+  "propertyid",
+  "property",
+  "average",
+  "standard_deviation",
+  "mean",
+  "minimum",
+  "maximum",
+  "median",
+  "column_break_clab",
+  "scanlength",
+  "scanfrequency",
+  "detailcount",
+  "valuetype",
+  "value",
+  "section_break_hlzw",
+  "reel_quality_detail"
+ ],
+ "fields": [
+  {
+   "fieldname": "reelqualityid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Reel Quality ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "average",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Average"
+  },
+  {
+   "fieldname": "standard_deviation",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Standard Deviation"
+  },
+  {
+   "fieldname": "mean",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Mean"
+  },
+  {
+   "fieldname": "median",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Median"
+  },
+  {
+   "fieldname": "value",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Value"
+  },
+  {
+   "fieldname": "valuetype",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Value Type"
+  },
+  {
+   "fieldname": "minimum",
+   "fieldtype": "Float",
+   "label": "Minimum"
+  },
+  {
+   "fieldname": "maximum",
+   "fieldtype": "Float",
+   "label": "Maximum"
+  },
+  {
+   "fieldname": "reelid",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Reel",
+   "options": "Reel"
+  },
+  {
+   "fieldname": "propertyid",
+   "fieldtype": "Link",
+   "label": "Property ID",
+   "options": "Property"
+  },
+  {
+   "fetch_from": "propertyid.property",
+   "fieldname": "property",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Property"
+  },
+  {
+   "fieldname": "column_break_clab",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "scanlength",
+   "fieldtype": "Float",
+   "label": "Scan Length"
+  },
+  {
+   "fieldname": "scanfrequency",
+   "fieldtype": "Float",
+   "label": "Scan Frequency"
+  },
+  {
+   "fieldname": "detailcount",
+   "fieldtype": "Float",
+   "label": "Detail Count"
+  },
+  {
+   "fieldname": "section_break_hlzw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reel_quality_detail",
+   "fieldtype": "Table",
+   "label": "Reel Quality Details",
+   "options": "Reel Quality Detail"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-22 09:58:05.668177",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Reel Quality",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,181 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-09-21 11:25:08.095049",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rollid",
+  "reelid",
+  "gradecode",
+  "gradecodedesc",
+  "productiontime",
+  "qualitystatus",
+  "causecodeid",
+  "column_break_kcpy",
+  "width",
+  "diameter",
+  "length",
+  "gross_weight",
+  "net_weight",
+  "section_break_ewel",
+  "roll_qualities"
+ ],
+ "fields": [
+  {
+   "fieldname": "rollid",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Roll ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "reelid",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Reel",
+   "options": "Reel"
+  },
+  {
+   "fieldname": "gradecode",
+   "fieldtype": "Link",
+   "label": "Grade Code",
+   "options": "Grade"
+  },
+  {
+   "fetch_from": "gradecode.gradecodedesc",
+   "fieldname": "gradecodedesc",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Grade",
+   "read_only": 1
+  },
+  {
+   "fieldname": "productiontime",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Production Time"
+  },
+  {
+   "fieldname": "qualitystatus",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Quality Status"
+  },
+  {
+   "fieldname": "causecodeid",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cause Code",
+   "options": "Cause Code"
+  },
+  {
+   "fieldname": "column_break_kcpy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "width",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Width"
+  },
+  {
+   "fieldname": "diameter",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Diameter"
+  },
+  {
+   "fieldname": "length",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Length"
+  },
+  {
+   "fieldname": "gross_weight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Gross Weight"
+  },
+  {
+   "fieldname": "net_weight",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Net Weight"
+  },
+  {
+   "fieldname": "section_break_ewel",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "roll_qualities",
+   "fieldtype": "Table",
+   "label": "Roll Quality",
+   "options": "Roll Quality"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-11-14 10:48:53.182229",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Roll",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Viewer",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Operator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Configuration Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "rollid",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "rollid"
+}

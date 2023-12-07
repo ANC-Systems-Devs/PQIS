@@ -1,0 +1,210 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2023-10-27 19:12:05.369210",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "seq",
+  "processspecdtlid",
+  "subprocessid",
+  "subprocess",
+  "propertyid",
+  "property_name",
+  "tag",
+  "units",
+  "column_break_bnag",
+  "lr",
+  "lc",
+  "ll",
+  "tgt",
+  "hl",
+  "hc",
+  "hr",
+  "column_break_auop",
+  "active",
+  "measureid",
+  "measurename",
+  "html_wdxb",
+  "startdate",
+  "starttime",
+  "enddate",
+  "endtime"
+ ],
+ "fields": [
+  {
+   "fieldname": "propertyid",
+   "fieldtype": "Link",
+   "label": "Property ID",
+   "options": "Property",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "propertyid.property",
+   "fieldname": "property_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Property",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "propertyid.units",
+   "fieldname": "units",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Units",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "propertyid.rt_tag",
+   "fieldname": "tag",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tag",
+   "read_only": 1
+  },
+  {
+   "fieldname": "subprocessid",
+   "fieldtype": "Link",
+   "label": "Subprocess ID",
+   "options": "Sub Process",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "subprocessid.description",
+   "fieldname": "subprocess",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Subprocess",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_bnag",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "processspecdtlid",
+   "fieldtype": "Data",
+   "label": "Process Spec Detail ID",
+   "read_only": 1
+  },
+  {
+   "default": "0.00",
+   "fieldname": "lc",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "LC"
+  },
+  {
+   "default": "0.00",
+   "fieldname": "ll",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "LL"
+  },
+  {
+   "default": "0.00",
+   "fieldname": "tgt",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "TGT",
+   "reqd": 1
+  },
+  {
+   "default": "0.00",
+   "fieldname": "hl",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "HL"
+  },
+  {
+   "default": "0.00",
+   "fieldname": "hc",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "HC"
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active"
+  },
+  {
+   "fieldname": "seq",
+   "fieldtype": "Int",
+   "label": "Sequence"
+  },
+  {
+   "default": "0.00",
+   "fieldname": "lr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "LR"
+  },
+  {
+   "default": "0.00",
+   "fieldname": "hr",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "HR"
+  },
+  {
+   "fieldname": "column_break_auop",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "measureid",
+   "fieldtype": "Link",
+   "label": "Measure ID",
+   "options": "Measure"
+  },
+  {
+   "fetch_from": "measureid.measurename",
+   "fieldname": "measurename",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Measure",
+   "read_only": 1
+  },
+  {
+   "fieldname": "startdate",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "starttime",
+   "fieldtype": "Time",
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "enddate",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "endtime",
+   "fieldtype": "Time",
+   "label": "End Time"
+  },
+  {
+   "fieldname": "html_wdxb",
+   "fieldtype": "HTML",
+   "options": "<br>\n<h5><i>Inactive Schedule</i></h5>\n<br>"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-12-07 14:17:50.587616",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Process Spec Details",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
