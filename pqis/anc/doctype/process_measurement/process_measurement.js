@@ -1,6 +1,8 @@
 // Copyright (c) 2023, ANC and contributors
 // For license information, please see license.txt
 
+let enteredFlag = false;
+
 frappe.ui.form.on("Process Measurement", {
 	refresh(frm) {
         $('*[data-fieldname="process_measurement_details"]').find('button.grid-add-row').addClass('hide');
@@ -104,6 +106,7 @@ frappe.ui.form.on("Process Measurement", {
         }
 
         if (frm.doc.workflow_state === "Draft") {
+            enteredFlag = true;
             $('.actions-btn-group').hide();
 
             frm.set_df_property('processmeasurementid', 'read_only', 1);
@@ -143,10 +146,12 @@ frappe.ui.form.on("Process Measurement", {
                 frm.set_df_property('date', 'read_only', 1);
                 frm.set_df_property('process_measurement_details', 'read_only', 1);
             }
-            frm.add_custom_button('Submit', () => {
-                frm.set_value('workflow_state', "Updated");
-                frm.save();
-            }).addClass("btn-primary");
+            if(frm.doc.edited){
+                frm.add_custom_button('Submit', () => {
+                    frm.set_value('workflow_state', "Updated");
+                    frm.save();
+                }).addClass("btn-primary");
+            }
             
         }
 
@@ -177,10 +182,6 @@ frappe.ui.form.on("Process Measurement", {
             $("div[data-fieldname=process_measurement_details]").find(`div.grid-heading-row`).find('.grid-static-col[title="Previous Second Date Value"]').find('.static-area').html(`<p>Previous Second Date Value<br>(${frappe.datetime.add_days(frm.doc.date, -2)})</p>`);
         }
 	},
-
-    process_measurement_details(frm) {
-
-    },
     
     onload(frm, cdt, cdn) {
         // for process link
@@ -249,7 +250,14 @@ frappe.ui.form.on("Process Measurement", {
             frm.set_value('workflow_state', "Draft");
             frm.refresh_fields('workflow_state');
         }
-    }
+
+        if(frm.doc.workflow_state == "Entered" && enteredFlag == false){
+            frm.set_value("edited", 1);
+            frm.refresh_field("edited");
+        }
+
+        enteredFlag = false;
+    },
 });
 
 frappe.ui.form.on('Process Measurement Detail', {

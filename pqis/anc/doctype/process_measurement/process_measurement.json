@@ -16,6 +16,7 @@
   "date",
   "datecreated",
   "cannot_edit",
+  "edited",
   "section_break_llef",
   "process_measurement_details",
   "amended_from"
@@ -101,13 +102,20 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "Cannot Edit"
+  },
+  {
+   "default": "0",
+   "fieldname": "edited",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Edited"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2023-12-11 12:22:41.120374",
+ "modified": "2023-12-12 11:42:42.232831",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Process Measurement",
