@@ -8,8 +8,8 @@ frappe.ui.form.on("Process Measurement", {
         if (frm.is_new()) {
             frm.enable_save();
 
-            frm.set_value('workflow_state_psm', "Not Saved");
-            frm.refresh_fields('workflow_state_psm');
+            frm.set_value('workflow_state', "Not Saved");
+            frm.refresh_fields('workflow_state');
 
             frm.set_value('date', frappe.datetime.now_date());
             frm.refresh_fields('date');
@@ -103,18 +103,18 @@ frappe.ui.form.on("Process Measurement", {
             });
         }
 
-        if (frm.doc.workflow_state_psm === "Draft") {
+        if (frm.doc.workflow_state === "Draft") {
             $('.actions-btn-group').hide();
 
             frm.set_df_property('processmeasurementid', 'read_only', 1);
 
             frm.add_custom_button('Submit', () => {
-                frm.set_value('workflow_state_psm', "Entered");
+                frm.set_value('workflow_state', "Entered");
                 frm.save();
             }).addClass("btn-primary");
 
             frm.add_custom_button('Cancel', () => {
-                frm.set_value('workflow_state_psm', "Cancelled");
+                frm.set_value('workflow_state', "Cancelled");
                 frm.save();
             });
 
@@ -127,7 +127,7 @@ frappe.ui.form.on("Process Measurement", {
             frm.doc.process_measurement_details = newValue;
         }
         
-        if (frm.doc.workflow_state_psm === "Entered") {
+        if (frm.doc.workflow_state === "Entered") {
             $('.actions-btn-group').hide();
 
             cur_frm.page.btn_secondary.hide();
@@ -143,16 +143,15 @@ frappe.ui.form.on("Process Measurement", {
                 frm.set_df_property('date', 'read_only', 1);
                 frm.set_df_property('process_measurement_details', 'read_only', 1);
             }
-
             frm.add_custom_button('Submit', () => {
-                frm.set_value('workflow_state_psm', "Updated");
+                frm.set_value('workflow_state', "Updated");
                 frm.save();
             }).addClass("btn-primary");
+            
         }
 
-        if (frm.doc.workflow_state_psm === "Updated") {
+        if (frm.doc.workflow_state === "Updated") {
             cur_frm.page.btn_secondary.hide();
-
             frm.set_df_property('processmeasurementid', 'read_only', 1);
             frm.set_df_property('areaid', 'read_only', 1);
             frm.set_df_property('processid', 'read_only', 1);
@@ -160,7 +159,7 @@ frappe.ui.form.on("Process Measurement", {
             frm.set_df_property('process_measurement_details', 'read_only', 1);
         }
 
-        if (frm.doc.workflow_state_psm === "Cancelled") {
+        if (frm.doc.workflow_state === "Cancelled") {
             cur_frm.page.btn_secondary.hide();
 
             frm.remove_custom_button('Submit');
@@ -238,7 +237,7 @@ frappe.ui.form.on("Process Measurement", {
         let newValue = frm.doc.process_measurement_details;
 
         newValue.map((item) => {
-            if (frm.doc.workflow_state_psm === "Not Saved" || frm.doc.workflow_state_psm === "Draft" || frm.doc.workflow_state_psm === "Entered") {
+            if (frm.doc.workflow_state === "Not Saved" || frm.doc.workflow_state === "Draft" || frm.doc.workflow_state === "Entered") {
                 item.is_null = item.value === undefined ? "Null" : "";
             }
         });
@@ -246,9 +245,9 @@ frappe.ui.form.on("Process Measurement", {
         frm.set_value('process_measurement_details', newValue);
         frm.refresh_fields("process_measurement_details");
 
-        if (frm.doc.workflow_state_psm === "Not Saved") {
-            frm.set_value('workflow_state_psm', "Draft");
-            frm.refresh_fields('workflow_state_psm');
+        if (frm.doc.workflow_state === "Not Saved") {
+            frm.set_value('workflow_state', "Draft");
+            frm.refresh_fields('workflow_state');
         }
     }
 });
@@ -275,9 +274,9 @@ function fetchChildList(frm, cur_frm) {
 
         frm.call({
             method: 'pqis.anc.doctype.process_measurement.process_measurement.fetch_processspec',
-            args: { 'data':  JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'active': 1, 'workflow_state_pssp': ['!=', 'Draft']}),
-                    'firstDate': JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'date': frappe.datetime.add_days(frm.doc.date, -1), 'workflow_state_psm': "Entered"}),
-                    'secondDate': JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'date': frappe.datetime.add_days(frm.doc.date, -2), 'workflow_state_psm': "Entered"})
+            args: { 'data':  JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'active': 1, 'workflow_state': ['!=', 'Draft']}),
+                    'firstDate': JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'date': frappe.datetime.add_days(frm.doc.date, -1), 'workflow_state': "Entered"}),
+                    'secondDate': JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'date': frappe.datetime.add_days(frm.doc.date, -2), 'workflow_state': "Entered"})
                 },
             callback: function(response) {
                 console.log("success", response);

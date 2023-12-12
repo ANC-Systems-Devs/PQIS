@@ -41,7 +41,8 @@
    "fieldname": "value",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Value"
+   "label": "Value",
+   "precision": "2"
   },
   {
    "fieldname": "subprocessid",
@@ -132,7 +133,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-05 14:12:42.996849",
+ "modified": "2023-12-11 10:43:31.669831",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Process Measurement Detail",

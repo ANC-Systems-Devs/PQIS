@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "autoincrement",
  "creation": "2023-09-21 10:32:31.570442",
  "default_view": "List",
@@ -36,7 +37,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-14 10:40:34.957062",
+ "modified": "2023-12-08 11:14:16.248500",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Source",

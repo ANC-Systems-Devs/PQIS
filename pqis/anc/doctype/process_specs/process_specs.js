@@ -16,8 +16,8 @@ frappe.ui.form.on("Process Specs", {
         document.getElementsByTagName("head")[0].appendChild(css);
 
         if (frm.is_new()) {
-            frm.set_value('workflow_state_pssp', "Not Saved");
-            frm.refresh_fields('workflow_state_pssp');
+            frm.set_value('workflow_state', "Not Saved");
+            frm.refresh_fields('workflow_state');
             
             $('*[data-fieldname="process_spec_details"]').hide();
 
@@ -41,7 +41,7 @@ frappe.ui.form.on("Process Specs", {
             });
         }
 
-        if (frm.doc.editted === 0 && frm.doc.workflow_state_pssp === "Entered") {
+        if (frm.doc.editted === 0 && frm.doc.workflow_state === "Entered") {
             $('.actions-btn-group').hide();
         } else {
             $('.actions-btn-group').show();
@@ -154,12 +154,12 @@ frappe.ui.form.on("Process Specs", {
     },
 
     before_save(frm) {
-        if (frm.doc.workflow_state_pssp === "Not Saved") {
-            frm.set_value('workflow_state_pssp', "Draft");
-            frm.refresh_fields('workflow_state_pssp');
+        if (frm.doc.workflow_state === "Not Saved") {
+            frm.set_value('workflow_state', "Draft");
+            frm.refresh_fields('workflow_state');
         }
 
-        if (frm.doc.workflow_state_pssp === "Entered") {
+        if (frm.doc.workflow_state === "Entered") {
             frm.set_value('editted', 1);
             frm.refresh_fields('editted');
         }
@@ -197,6 +197,7 @@ frappe.ui.form.on('Process Spec Details', {
         const count = frm.doc.process_spec_details.filter(x => parseInt(x.seq) === parseInt(item.seq));
 
         if (count.length >= 2) {
+            // frappe.throw("Same sequence number already exists.")
             item.seq = "";
         }
 

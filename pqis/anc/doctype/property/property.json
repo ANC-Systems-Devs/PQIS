@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "autoincrement",
  "creation": "2023-09-21 11:02:06.549278",
  "default_view": "List",
@@ -82,7 +83,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-06 19:23:35.331512",
+ "modified": "2023-12-08 11:10:04.402300",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Property",

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "autoincrement",
  "creation": "2023-10-19 12:14:02.743025",
  "default_view": "List",
@@ -41,7 +42,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-14 10:34:40.569510",
+ "modified": "2023-12-08 10:48:29.353784",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Area",
