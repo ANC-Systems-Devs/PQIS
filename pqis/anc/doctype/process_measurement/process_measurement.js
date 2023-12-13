@@ -2,6 +2,7 @@
 // For license information, please see license.txt
 
 let enteredFlag = false;
+let sendFlag = true;
 
 frappe.ui.form.on("Process Measurement", {
 	refresh(frm) {
@@ -131,6 +132,35 @@ frappe.ui.form.on("Process Measurement", {
         }
         
         if (frm.doc.workflow_state === "Entered") {
+            let process_measurement_details_data = []
+            frm.doc.process_measurement_details.forEach((row) => {
+                process_measurement_details_data.push({
+                    "time": row.time,
+                    "tag": "AESOAN1TNGTEST",
+                    "value": row.value
+                })
+            });
+            console.log(sendFlag);
+            //check this flag
+            if(sendFlag == false){
+                frappe.call({
+                    method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_esb',
+                    args: {
+                        name: frm.doc.name,
+                        date: frm.doc.date,
+                        process_measurement_details: process_measurement_details_data
+                    },
+                    callback: function(r){
+                        // sendFlag = true;
+                        console.log(r.message);
+                    }
+                })
+            }
+
+            sendFlag = true;
+
+            // console.log(sendFlag);
+
             $('.actions-btn-group').hide();
 
             cur_frm.page.btn_secondary.hide();
@@ -159,7 +189,9 @@ frappe.ui.form.on("Process Measurement", {
             cur_frm.page.btn_secondary.hide();
             frm.set_df_property('processmeasurementid', 'read_only', 1);
             frm.set_df_property('areaid', 'read_only', 1);
+            frm.set_df_property('areaid', 'allow_on_submit', 0);
             frm.set_df_property('processid', 'read_only', 1);
+            frm.set_df_property('processid', 'allow_on_submit', 0);
             frm.set_df_property('date', 'read_only', 1);
             frm.set_df_property('process_measurement_details', 'read_only', 1);
         }
@@ -255,7 +287,7 @@ frappe.ui.form.on("Process Measurement", {
             frm.set_value("edited", 1);
             frm.refresh_field("edited");
         }
-
+        sendFlag = false;
         enteredFlag = false;
     },
 });

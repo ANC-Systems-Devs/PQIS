@@ -4,6 +4,7 @@
 import frappe
 import json
 from frappe.model.document import Document
+import requests
 
 @frappe.whitelist()
 def auto_increment_id():
@@ -92,3 +93,31 @@ def fetch_processspec(data, firstDate, secondDate):
 	
 class ProcessMeasurement(Document):
 	pass
+@frappe.whitelist()
+def generate_post_to_esb(name, date, process_measurement_details):
+	#URL to ESB location
+	url = "http://10.12.50.156:50025/ESB"
+
+	if(int(name) < 100):
+		formatted_name = "PRMC00" + name
+	else:
+		formatted_name = "PRMC0" + name
+	
+	#data needed to be sent
+	data = {
+		"name":formatted_name,
+		"date":date,
+		"process_measurement_details":json.loads(process_measurement_details)
+	}
+
+	return requests.post(url, json=data)
+
+
+	try:
+		response = requests(url, data = json.dumps(data))
+		if(response.satus_code == 200):
+			return "Successful"
+		else:
+			return f"Failed to send data to ESB. Status code: {response.status_code}"
+	except Exception as e:
+		return f"Error sending data to ESB: {str(e)}"
