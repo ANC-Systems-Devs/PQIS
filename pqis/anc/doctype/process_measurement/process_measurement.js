@@ -238,8 +238,8 @@ frappe.ui.form.on("Process Measurement", {
     areaid(frm) {
         frm.enable_save();
 
-        cur_frm.clear_table("process_measurement_details"); 
-        cur_frm.refresh_fields("process_measurement_details");
+        // cur_frm.clear_table("process_measurement_details"); 
+        // cur_frm.refresh_fields("process_measurement_details");
 
         frm.set_value('processid', undefined);
         frm.refresh_fields('processid');
