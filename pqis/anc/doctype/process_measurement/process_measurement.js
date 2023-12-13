@@ -238,8 +238,8 @@ frappe.ui.form.on("Process Measurement", {
     areaid(frm) {
         frm.enable_save();
 
-        // cur_frm.clear_table("process_measurement_details"); 
-        // cur_frm.refresh_fields("process_measurement_details");
+        cur_frm.clear_table("process_measurement_details"); 
+        cur_frm.refresh_fields("process_measurement_details");
 
         frm.set_value('processid', undefined);
         frm.refresh_fields('processid');
@@ -250,13 +250,13 @@ frappe.ui.form.on("Process Measurement", {
     processid(frm) {
         frm.enable_save();
 
-        // fetchChildList(frm, cur_frm);
+        fetchChildList(frm, cur_frm);
     },
 
     date(frm) {
         frm.enable_save();
 
-        // fetchChildList(frm, cur_frm);
+        fetchChildList(frm, cur_frm);
     },
 
     process_measurement_details_on_form_rendered(frm, cdt, cdn) {
