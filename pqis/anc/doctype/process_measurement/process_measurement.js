@@ -256,7 +256,7 @@ frappe.ui.form.on("Process Measurement", {
     date(frm) {
         frm.enable_save();
 
-        fetchChildList(frm, cur_frm);
+        // fetchChildList(frm, cur_frm);
     },
 
     process_measurement_details_on_form_rendered(frm, cdt, cdn) {
