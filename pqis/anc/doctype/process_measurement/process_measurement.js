@@ -136,7 +136,7 @@ frappe.ui.form.on("Process Measurement", {
             frm.doc.process_measurement_details.forEach((row) => {
                 process_measurement_details_data.push({
                     "time": row.time,
-                    "tag": "AESOAN1TNGTEST",
+                    "tag": row.tag,
                     "value": row.value
                 })
             });
@@ -250,7 +250,7 @@ frappe.ui.form.on("Process Measurement", {
     processid(frm) {
         frm.enable_save();
 
-        fetchChildList(frm, cur_frm);
+        // fetchChildList(frm, cur_frm);
     },
 
     date(frm) {
