@@ -72,15 +72,18 @@ frappe.ui.form.on("Process Specs", {
         frm.set_value('processid', undefined);
         frm.refresh_fields('processid');
 
-        // cur_frm.clear_table("process_spec_details"); 
-        // cur_frm.refresh_fields("process_spec_details");
+        //HERE
 
-        // $('*[data-fieldname="process_spec_details"]').hide();
+        cur_frm.clear_table("process_spec_details"); 
+        cur_frm.refresh_fields("process_spec_details");
+
+        $('*[data-fieldname="process_spec_details"]').hide();
     },
 
     processid(frm) {
-        // cur_frm.clear_table("process_spec_details"); 
-        // cur_frm.refresh_fields("process_spec_details");
+        //HERE
+        cur_frm.clear_table("process_spec_details"); 
+        cur_frm.refresh_fields("process_spec_details");
 
         if (frm.doc.areaid != undefined && frm.doc.processid != undefined) {
             const fetchDupParam = {
@@ -116,11 +119,12 @@ frappe.ui.form.on("Process Specs", {
                         frm.set_value('processdesc', "");
                         frm.refresh_fields('processid');
                         frm.refresh_fields('processdesc');
-
-                        // $('*[data-fieldname="process_spec_details"]').hide();
+                        //HERE
+                        $('*[data-fieldname="process_spec_details"]').hide();
                     } else if (response.message.status === "Success") {
                         if (response.message.message.length === 0) {
-                            // $('*[data-fieldname="process_spec_details"]').hide();
+                            //HERE
+                            $('*[data-fieldname="process_spec_details"]').hide();
                         } else {
                             $('*[data-fieldname="process_spec_details"]').show();
 
