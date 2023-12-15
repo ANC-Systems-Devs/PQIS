@@ -96,7 +96,7 @@ class ProcessMeasurement(Document):
 @frappe.whitelist()
 def generate_post_to_esb(name, date, process_measurement_details):
 	#URL to ESB location
-	url = "http://10.12.50.156:50025/ESB"
+	url = "http://10.12.60.75:50104/ESBPROD"
 
 	if(int(name) < 100):
 		formatted_name = "PRMC00" + name
