@@ -130,7 +130,7 @@ app_license = "mit"
 
 scheduler_events = {
 	"all": [
-		"pqis.tasks.all"
+		"pqis.tasks.all_mst"
 	],
 	"daily": [
 		"pqis.tasks.daily"
