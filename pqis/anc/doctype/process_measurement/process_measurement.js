@@ -131,7 +131,7 @@ frappe.ui.form.on("Process Measurement", {
             frm.doc.process_measurement_details = newValue;
         }
         
-        if (frm.doc.workflow_state === "Entered") {
+        if (frm.doc.workflow_state === "Entered" || frm.doc.workflow_state === "Updated") {
             let process_measurement_details_data = []
             frm.doc.process_measurement_details.forEach((row) => {
                 process_measurement_details_data.push({
@@ -359,12 +359,12 @@ function fetchChildList(frm, cur_frm) {
 
                                 if (response.message.firstprev.length !== 0) {
                                     let list = response.message.firstprev.filter(v => parseInt(v.subprocessid) === parseInt(item.subprocessid) && parseInt(v.propertyid) === parseInt(item.propertyid));
-                                    prevValue = list[0].is_null === "Null" ? "null" : list[0].value;
+                                    prevValue = list[0]?.is_null === "Null" ? "null" : list[0]?.value;
                                 }
 
                                 if (response.message.secondprev.length !== 0) {
                                     let secondList = response.message.secondprev.filter(v => parseInt(v.subprocessid) === parseInt(item.subprocessid) && parseInt(v.propertyid) === parseInt(item.propertyid));
-                                    prev2ndValue = secondList[0].is_null === "Null" ? "null" : secondList[0].value;
+                                    prev2ndValue = secondList[0]?.is_null === "Null" ? "null" : secondList[0]?.value;
                                 }
 
                                 let formattedString = String(count++).padStart(4, '0');

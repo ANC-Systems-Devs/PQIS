@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "autoincrement",
+ "autoname": "field:rawdataid",
  "creation": "2023-09-21 10:30:55.657378",
  "default_view": "List",
  "doctype": "DocType",
@@ -8,12 +8,12 @@
  "engine": "InnoDB",
  "field_order": [
   "rawdataid",
-  "data",
-  "datetime",
-  "sourceid",
   "sourcename",
+  "data",
   "column_break_ujwp",
-  "status"
+  "status",
+  "sourceid",
+  "datetime"
  ],
  "fields": [
   {
@@ -26,7 +26,7 @@
   },
   {
    "fieldname": "data",
-   "fieldtype": "Data",
+   "fieldtype": "Code",
    "in_list_view": 1,
    "label": "Data"
   },
@@ -65,11 +65,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-14 10:34:58.428847",
+ "modified": "2024-02-22 11:32:07.877763",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Raw Data",
- "naming_rule": "Autoincrement",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

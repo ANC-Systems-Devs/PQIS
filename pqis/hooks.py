@@ -131,19 +131,19 @@ app_license = "mit"
 scheduler_events = {
 	"all": [
 		"pqis.tasks.all_mst"
-	],
-	"daily": [
-		"pqis.tasks.daily"
-	],
-	"hourly": [
-		"pqis.tasks.hourly"
-	],
-	"weekly": [
-		"pqis.tasks.weekly"
-	],
-	"monthly": [
-		"pqis.tasks.monthly"
-	],
+	]
+	# "daily": [
+	# 	"pqis.tasks.daily"
+	# ],
+	# "hourly": [
+	# 	"pqis.tasks.hourly"
+	# ],
+	# "weekly": [
+	# 	"pqis.tasks.weekly"
+	# ],
+	# "monthly": [
+	# 	"pqis.tasks.monthly"
+	# ],
 }
 
 # Testing

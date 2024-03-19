@@ -1,6 +1,7 @@
 {
  "actions": [],
- "autoname": "autoincrement",
+ "allow_import": 1,
+ "autoname": "field:gradecode",
  "creation": "2023-10-05 08:08:53.115323",
  "default_view": "List",
  "doctype": "DocType",
@@ -8,9 +9,10 @@
  "engine": "InnoDB",
  "field_order": [
   "gradecode",
+  "basis_weight",
   "gradecodedesc",
-  "category",
   "column_break_yupu",
+  "category",
   "active"
  ],
  "fields": [
@@ -27,8 +29,7 @@
    "fieldname": "gradecodedesc",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Grade Description",
-   "reqd": 1
+   "label": "Grade Description"
   },
   {
    "default": "HighBright",
@@ -36,8 +37,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Category",
-   "options": "HighBright\nNewsprint",
-   "reqd": 1
+   "options": "HighBright\nNewsprint\nBook"
   },
   {
    "fieldname": "column_break_yupu",
@@ -49,15 +49,21 @@
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Active"
+  },
+  {
+   "fieldname": "basis_weight",
+   "fieldtype": "Data",
+   "label": "Basis Weight",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-14 10:41:46.747683",
+ "modified": "2024-02-22 11:30:23.641197",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Grade",
- "naming_rule": "Autoincrement",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
