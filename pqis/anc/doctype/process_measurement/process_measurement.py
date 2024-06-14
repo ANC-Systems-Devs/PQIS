@@ -97,6 +97,7 @@ class ProcessMeasurement(Document):
 def generate_post_to_esb(name, date, process_measurement_details):
 	#URL to ESB location
 	url = "http://10.12.60.92:50104/ESBPROD"
+	# url = "http://10.12.60.175:50102/ESBTEST"
 
 	if(int(name) < 100):
 		formatted_name = "PRMC00" + name

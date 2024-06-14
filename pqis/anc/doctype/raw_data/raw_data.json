@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "field:rawdataid",
  "creation": "2023-09-21 10:30:55.657378",
  "default_view": "List",
@@ -13,7 +14,8 @@
   "column_break_ujwp",
   "status",
   "sourceid",
-  "datetime"
+  "datetime",
+  "reprocess"
  ],
  "fields": [
   {
@@ -61,11 +63,16 @@
    "label": "Status",
    "options": "Processed\nUnprocessed",
    "reqd": 1
+  },
+  {
+   "fieldname": "reprocess",
+   "fieldtype": "Button",
+   "label": "Reprocess"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-22 11:32:07.877763",
+ "modified": "2024-03-25 09:37:03.109135",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Raw Data",

@@ -15,8 +15,9 @@
   "column_break_bywt",
   "date",
   "datecreated",
-  "cannot_edit",
-  "edited",
+  "editted",
+  "set_time",
+  "apply_time",
   "section_break_llef",
   "process_measurement_details",
   "amended_from"
@@ -72,7 +73,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "columns": 10,
+   "allow_on_submit": 1,
    "fieldname": "process_measurement_details",
    "fieldtype": "Table",
    "label": "Process Measurement Details",
@@ -99,24 +100,29 @@
   },
   {
    "default": "0",
-   "fieldname": "cannot_edit",
+   "fieldname": "editted",
    "fieldtype": "Check",
    "hidden": 1,
-   "label": "Cannot Edit"
+   "label": "Editted"
   },
   {
-   "default": "0",
-   "fieldname": "edited",
-   "fieldtype": "Check",
-   "hidden": 1,
-   "label": "Edited"
+   "allow_on_submit": 1,
+   "fieldname": "set_time",
+   "fieldtype": "Time",
+   "label": "Set Time"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "apply_time",
+   "fieldtype": "Button",
+   "label": "Apply Time"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-02-28 10:55:20.410556",
+ "modified": "2024-03-20 12:02:11.708285",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Process Measurement",
@@ -132,7 +138,9 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
    "share": 1,
+   "submit": 1,
    "write": 1
   },
   {
@@ -180,8 +188,9 @@
   }
  ],
  "show_title_field_in_link": 1,
- "sort_field": "modified",
+ "sort_field": "date",
  "sort_order": "DESC",
  "states": [],
- "title_field": "processmeasurementid"
+ "title_field": "processmeasurementid",
+ "track_changes": 1
 }

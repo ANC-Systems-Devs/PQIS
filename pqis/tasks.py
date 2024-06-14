@@ -17,7 +17,7 @@ def all_mst():
     formatted_time = get_datetime(localized_time.strftime('%Y-%m-%d %H:%M:%S'))
 
     documents = frappe.get_list("Process Measurement", 
-                               filters={"workflow_state_psm": "Entered"},
+                               filters={"workflow_state": "Entered"},
                                fields=['name', 'datecreated']
                               )
     
