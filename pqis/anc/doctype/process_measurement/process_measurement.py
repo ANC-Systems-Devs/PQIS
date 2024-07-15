@@ -5,7 +5,7 @@ import frappe
 import json
 from frappe.model.document import Document
 import requests
-
+from datetime import datetime
 @frappe.whitelist()
 def auto_increment_id():
 	try:
@@ -111,7 +111,25 @@ def generate_post_to_esb(name, date, process_measurement_details):
 		"process_measurement_details":json.loads(process_measurement_details)
 	}
 
-	return requests.post(url, json=data)
+	headers = {
+        'Content-Type': 'application/json'
+    }
+	try:
+		response = requests.post(url, headers=headers, json=data)
+		if response.status_code != 200:
+			raise Exception("You messed up!")
+		return response.text
+	except Exception as e:
+		frappe.get_doc({
+			"doctype": "Message Queue",
+			"url": url,
+			"original_doctype": "Process Measurement",
+			"error_time": datetime.now(),
+			"header": headers,
+			"message": data
+		}).insert()
+		return str(e)
+
 
 
 	try:
