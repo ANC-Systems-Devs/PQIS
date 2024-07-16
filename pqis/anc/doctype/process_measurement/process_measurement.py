@@ -129,14 +129,3 @@ def generate_post_to_esb(name, date, process_measurement_details):
 			"message": data
 		}).insert()
 		return str(e)
-
-
-
-	try:
-		response = requests(url, data = json.dumps(data))
-		if(response.satus_code == 200):
-			return "Successful"
-		else:
-			return f"Failed to send data to ESB. Status code: {response.status_code}"
-	except Exception as e:
-		return f"Error sending data to ESB: {str(e)}"
