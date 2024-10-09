@@ -115,29 +115,31 @@ def generate_post_to_esb(name, date, process_measurement_details):
         'Content-Type': 'application/json'
     }
 	try:
-		response = requests.post(url, headers=headers, json=data)
+		response = requests.post(url, headers=headers, json=data, timeout=5)
 		if response.status_code != 200 and response.status_code != 202:
 			raise Exception("Unsuccessful post")
 		else:
-			frappe.get_doc({
+			doc = frappe.get_doc({
 				"doctype": "Message Queue",
 				"url": url,
 				"status": "Sent",
 				"original_doctype": "Process Measurement",
-				"original_name": name,
 				"error_time": datetime.now(),
 				"header": headers,
 				"message": data
-			}).insert()
+			})
+			doc.insert()
+			frappe.db.set_value("Message Queue", doc.name, "original_name", name)
 		return response.text
 	except Exception as e:
-		frappe.get_doc({
+		doc = frappe.get_doc({
 			"doctype": "Message Queue",
 			"url": url,
 			"original_doctype": "Process Measurement",
-			"original_name": name,
 			"error_time": datetime.now(),
 			"header": headers,
 			"message": data
-		}).insert()
+		})
+		doc.insert()
+		frappe.db.set_value("Message Queue", doc.name, "original_name", name)
 		return str(e)

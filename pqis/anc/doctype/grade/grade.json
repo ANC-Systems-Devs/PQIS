@@ -37,7 +37,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Category",
-   "options": "HighBright\nNewsprint\nBook"
+   "options": "HighBright\nNewsprint\nBook\nDirectory"
   },
   {
    "fieldname": "column_break_yupu",
@@ -59,7 +59,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-22 11:30:23.641197",
+ "modified": "2024-09-04 10:00:53.779400",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Grade",

@@ -130,8 +130,8 @@ frappe.ui.form.on("Process Measurement", {
         });
     },
 
-    before_workflow_action(frm){
-        if (frm.selected_workflow_action == 'Submit'){
+    after_workflow_action(frm){
+        if (frm.doc.workflow_state == 'Entered'){
             console.log("reached");
             let process_measurement_details_data = []
             frm.doc.process_measurement_details.forEach((row) => {
