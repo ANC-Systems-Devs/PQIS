@@ -24,4 +24,23 @@ frappe.ui.form.on("Property", {
             });
         } 
 	},
+
+    // On Save: After the Property form is saved, update the Property Conversions
+    after_save(frm) {
+        frappe.call({
+            method: 'pqis.anc.doctype.property.property.update_property_conversions',
+            args: {
+                propertyid: frm.doc.name,  // Get the propertyid from the form  
+                imperial_unit: frm.doc.units,  // Get the imperial unit from the form
+                conversion_multiplier: frm.doc.conversion_multiplier  // Get the conversion multiplier from the form
+            },
+            callback: function(response) {
+                if (response.message.status === "Success") {
+                    frappe.msgprint("Property Conversions updated successfully.");
+                } else {
+                    frappe.msgprint("Failed to update Property Conversions.");
+                }
+            }
+        });
+    }
 });

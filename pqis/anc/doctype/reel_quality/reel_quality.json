@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "autoincrement",
  "creation": "2023-10-05 08:43:10.849539",
  "doctype": "DocType",
@@ -131,7 +132,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-27 13:31:58.543659",
+ "modified": "2024-10-09 17:31:40.754513",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Reel Quality",

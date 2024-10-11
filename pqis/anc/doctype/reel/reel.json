@@ -9,6 +9,7 @@
  "engine": "InnoDB",
  "field_order": [
   "reelid",
+  "create_json",
   "gradecode",
   "gradecodedesc",
   "buildstatus",
@@ -57,11 +58,16 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Turnup Time"
+  },
+  {
+   "fieldname": "create_json",
+   "fieldtype": "Button",
+   "label": "Create Json"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-27 14:00:10.080299",
+ "modified": "2024-10-09 17:09:42.234807",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Reel",

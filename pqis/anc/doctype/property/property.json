@@ -16,8 +16,12 @@
   "paperlabpropid",
   "valuetype",
   "units",
+  "conversion_multiplier",
   "column_break_dhqt",
-  "active"
+  "active",
+  "quality_form",
+  "section_break_ltpz",
+  "property_conversions_name"
  ],
  "fields": [
   {
@@ -79,11 +83,33 @@
    "fieldname": "paperlabpropid",
    "fieldtype": "Data",
    "label": "Paperlab Prop ID"
+  },
+  {
+   "default": "0",
+   "fieldname": "quality_form",
+   "fieldtype": "Check",
+   "label": "Quality Form"
+  },
+  {
+   "depends_on": "eval: doc.property && doc.property.includes('conversion')",
+   "fieldname": "conversion_multiplier",
+   "fieldtype": "Data",
+   "label": "Conversion Multiplier"
+  },
+  {
+   "fieldname": "section_break_ltpz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "property_conversions_name",
+   "fieldtype": "Table",
+   "label": "Property Conversions Table",
+   "options": "Property Conversions"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-13 16:42:55.289626",
+ "modified": "2024-10-11 11:57:16.777768",
  "modified_by": "Administrator",
  "module": "ANC",
  "name": "Property",

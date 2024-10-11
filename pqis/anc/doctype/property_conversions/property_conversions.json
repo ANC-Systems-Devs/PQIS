@@ -1,0 +1,58 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "format: Child_list- {property_conversion_id}",
+    "creation": "2024-09-30 11:02:10.805358",
+    "default_view": "List",
+    "doctype": "DocType",
+    "engine": "InnoDB",
+    "field_order": [
+     "property_conversion_id",
+     "property_conversion_name",
+     "imperial_unit",
+     "conversion_multiplier"
+    ],
+    "fields": [
+     {
+      "fetch_from": "property_conversion_id.units",
+      "fieldname": "imperial_unit",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Imperial Unit"
+     },
+     {
+      "fetch_from": "property_conversion_id.conversion_multiplier",
+      "fieldname": "conversion_multiplier",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Conversion Multiplier"
+     },
+     {
+      "fetch_from": "property_conversion_id.property",
+      "fieldname": "property_conversion_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Property Conversion Name"
+     },
+     {
+      "fieldname": "property_conversion_id",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Property Conversion ID",
+      "options": "Property"
+     }
+    ],
+    "index_web_pages_for_search": 1,
+    "istable": 1,
+    "links": [],
+    "modified": "2024-09-30 15:08:43.002534",
+    "modified_by": "Administrator",
+    "module": "ANC",
+    "name": "Property Conversions",
+    "naming_rule": "Expression",
+    "owner": "Administrator",
+    "permissions": [],
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+   }
