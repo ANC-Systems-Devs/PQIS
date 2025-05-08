@@ -8,6 +8,8 @@ from frappe.model.document import Document
 from frappe.permissions import allow_everything
 import os
 import xml.etree.ElementTree as ET
+import datetime
+from frappe.utils import get_datetime, format_datetime, now_datetime
 	
 @frappe.whitelist()
 def save_raw_data(data):
@@ -53,7 +55,32 @@ class Reel(Document):
 		# Check if buildstatus is 'Tested' and print a message
 		if self.buildstatus == 'Tested':
 			frappe.msgprint(f"Reel {self.reelid} has passed the testing phase.")
+
+
 	def on_update(self):
+		"""
+			Handles the update process for the Reel object. It performs the following actions:
+
+			- If the Reel is updated or created:
+				- Displays a message indicating its update.
+				- If the Reel's build status is 'Complete', it fetches properties from the 'DataHub' source, retrieves their values via an external API, 
+				inserts the property data into the 'Reel Quality' table, and sends them to the ESB system .
+				- If the Reel's build status is 'Tested', fetches Reel Qualities info for the properties from the 'Paperlab' source and sends them to the ESB system.
+			
+			Function steps:
+			1. Check if the Reel is new or updated.
+			2. Handle the 'Complete' build status by fetching and processing properties from 'DataHub'.
+			3. Make API calls to retrieve property values, and insert them into the 'Reel Quality' table.
+			4. Handle and insert conversion properties if applicable.
+			5. Send the added properties to the ESB system for further processing.
+
+			Raises:
+				ValueError: If 'starttime' or 'turnuptime' fields are missing when the build status is 'Complete'.
+				Exception: If an error occurs during property fetching or API calls.
+			
+			Returns:
+				None
+   		"""
 		if self.is_new():
 			frappe.msgprint(f"New Reel {self.reelid} has been created.")
 		else:
@@ -61,7 +88,7 @@ class Reel(Document):
 			if self.buildstatus == 'Complete':
 				added_properties = [] 
 				frappe.msgprint(f"Reel {self.reelid} has passed the update testing phase.")
-				self.send_reel_creation_email(self.reelid)
+				# self.send_reel_creation_email(self.reelid)
 				try:
 					reel_id = self.reelid
 					starttime = self.starttime
@@ -70,12 +97,12 @@ class Reel(Document):
 					if not starttime or not turnuptime:
 						raise ValueError("Missing starttime or turnuptime for the reel.")
 
-					# 4. Fetch properties with 'DataHub' source and valid rt_tag
+					#Fetching properties with 'DataHub' source and valid rt_tag
 					properties = fetch_properties(['DataHub'])
 				except Exception as e:
 					frappe.msgprint(f"An error occurred while fetching properties: {str(e)}")
 
-				# 5. For each property, make an API call and insert data into Reel Quality
+				#For each property, making an API call and inserting data into Reel Quality
 				for prop in properties:
 					property_data = {
 						'reelid': reel_id,
@@ -88,7 +115,7 @@ class Reel(Document):
 						'name': prop['name']
 					}
 
-					# Check if the property already exists in Reel Quality for the given reel_id
+					# Checking if the property already exists in Reel Quality for the given reel_id
 					existing_reel_quality_entry = frappe.get_all(
 						'Reel Quality', 
 						filters={'reelid': reel_id, 'propertyid': property_data['name']},
@@ -96,7 +123,7 @@ class Reel(Document):
 					)
 
 					if not existing_reel_quality_entry:  # Only proceed if the entry does not exist
-						# Make the API call
+						# Making the API call
 						added_properties.append(prop)
 						rt_tag = property_data['rt_tag']
 						url = "http://10.12.60.77:5000/api/MopsHIstoryOne"
@@ -109,22 +136,24 @@ class Reel(Document):
 							"interpolationMethod": "Aggregate",
 							"aggregateType": "PointAverage"
 						}
+						
 
+						response = None
 						try:
 							response = requests.post(url, headers=headers, json=data)
 							if response.status_code == 200:
-								# Parse XML response to extract the value
+								# Parsing XML response to extract the value
 								root = ET.fromstring(response.text)
 								values = root.find(".//Value").text
 								property_data['value'] = values
 
-								# Insert new entry into 'Reel Quality'
+								# Inserting new entry into 'Reel Quality'
 								frappe.get_doc({
 									'doctype': 'Reel Quality',
 									'reelid': reel_id,
 									'propertyid': property_data['name'],
 									'property': property_data['property'],
-									'average': property_data['value'],  # Use value from API response
+									'average': property_data['value'],  # Using value from API response
 									'standard_deviation': None,
 									'mean': None,
 									'minimum': None,
@@ -136,18 +165,22 @@ class Reel(Document):
 									'valuetype': None
 								}).insert(ignore_permissions=True)
 
-								# Handle conversion properties if needed
+								# Handling conversion properties if needed
 								conversion_properties = insert_missing_conversion_properties(property_data, reel_id)
 								added_properties.extend(conversion_properties)
-
-
 								frappe.msgprint(f"New Reel Quality Entry Created: {property_data}")
 							else:
 								frappe.msgprint(f"Failed to get a successful response: {response.status_code}")
+								raise Exception("Status Code Not 200")
 						except Exception as e:
+							if not response:
+								response = {"status_code": "Failed", "text": str(e)}
+							reel_object = {"doctype": "Reel", "name": reel_id}
+							call_info = {"url": url, "header": headers, "load": data}
+							send_api_error(reel_object, call_info, response, "Failed")
 							frappe.msgprint(f"An error occurred during the API call: {str(e)}")
 					else:
-						# If the property already exists, skip the insertion
+						# If the property already exists, skipping the insertion
 						frappe.msgprint(f"Property {property_data['propertyid']} already exists in Reel Quality for Reel ID {reel_id}, skipping.")
 				
 				# If added properties, send them to ESB
@@ -242,20 +275,26 @@ class Reel(Document):
 	# 		except Exception as e:
 	# 			frappe.msgprint(f"An error occurred during the API call: {str(e)}")
 
+	def after_insert(self):
+		doc = frappe.get_doc({
+			"doctype": "Roll to Reel CMP",
+			"reel": self.reelid,
+		})
+		doc.insert()
 		
 	def send_reel_creation_email(self, reel_id):
-		# Fetch Reel Quality entries that match the reel ID
+		# Fetching Reel Quality entries that match the reel ID
 		try:
 			reel_quality_entries = frappe.get_all(
 				'Reel Quality',
 				filters={'reelid': reel_id},
-				fields=['propertyid', 'property', 'average']  # Fetch the required fields
+				fields=['propertyid', 'property', 'average']  # Fetching the required fields
 			)
 		except Exception as e:
 			frappe.msgprint(f"An error occurred while fetching Reel Quality entries: {str(e)}")
 			return
 		
-		# Prepare email content
+		# Setting email content
 		email_content = f"New Reel {reel_id} has been created.<br>"
 		if reel_quality_entries:
 			email_content += "Here are the associated Reel Quality entries:<br><br>"
@@ -264,7 +303,7 @@ class Reel(Document):
 		else:
 			email_content += "No Reel Quality entries found for this Reel.<br>"
 
-		# Send the email
+		# Sending the email
 		try:
 			frappe.sendmail(
 				recipients=['shadabm@albertanewsprint.com'],  # Recipient email
@@ -553,7 +592,7 @@ def send_added_properties_json(reel_id, added_properties):
 			added_properties = frappe.parse_json(added_properties)
 		
 		# Fetch the reel information
-		frappe.msgprint(f"In the function with added properties: {added_properties}")
+		# frappe.msgprint(f"In the function with added properties: {added_properties}")
 		reel_info = frappe.get_doc('Reel', reel_id)
 
 		# Convert starttime and turnuptime to string (ISO 8601 format)
@@ -617,26 +656,76 @@ def send_added_properties_json(reel_id, added_properties):
 			"doctype": "Datahub Reel Quality Data Entry",
 			"entries": added_reel_quality_entries  # Only the simplified properties
 		}
-		frappe.msgprint(f"Constructed JSON: {added_reel_json}")
+		# frappe.msgprint(f"Constructed JSON: {added_reel_json}")
 
 		# Send this JSON data to the external system (ESB)
-		#url = "http://10.12.50.85:8002/ESB_Shadab"  # Update to appropriate URL if needed
-		url = "http://10.12.60.175:50104/ESBPROD"  # ESB production URL
+		#url = "http://10.12.50.85:8002/ESB_Shadab"  # Local Shadab ESB
+		url = "http://10.12.60.175:50104/ESBPROD"  # ESB Test V01 URL
+		#url = "http://10.12.60.75:50104/ESBPROD"  # ESB Prod V01 URL
+		
 		headers = {
 			'Content-Type': 'application/json'
 		}
 
+		response = None
 		# Send the request
 		try:
 			response = requests.post(url, headers=headers, json=added_reel_json)
 			if response.status_code != 200 and response.status_code != 202:
 				raise Exception("Unsuccessful post to ESB.")
-			
-			frappe.msgprint("Added properties sent successfully to ESB.")
+			else:
+				# doc = frappe.get_doc({
+				# 	"doctype": "Message Queue",
+				# 	"url": url,
+				# 	"status": "Sent",
+				# 	"original_doctype": "Reel",
+				# 	"error_time": datetime.datetime.now(),
+				# 	"header": headers,
+				# 	"message": added_reel_json
+				# })
+				# doc.insert()
+				# frappe.db.set_value("Message Queue", doc.name, "original_name", reel_id)
+				reel_object = {"doctype": "Reel", "name": reel_id}
+				call_info = {"url": url, "header": headers, "load": added_reel_json}
+				send_api_error(reel_object, call_info, response, "Success")			
+				frappe.msgprint("Added properties sent successfully to ESB.")
 		except Exception as e:
+			# doc = frappe.get_doc({
+			# 	"doctype": "Message Queue",
+			# 	"url": url,
+			# 	"original_doctype": "Reel",
+			# 	"error_time": datetime.now(),
+			# 	"header": headers,
+			# 	"message": added_reel_json
+			# })
+			# doc.insert()
+			# frappe.db.set_value("Message Queue", doc.name, "original_name", reel_id)
+			if not response:
+				response = {"status_code": "Failed", "text": str(e)}
+			reel_object = {"doctype": "Reel", "name": reel_id}
+			call_info = {"url": url, "header": headers, "load": added_reel_json}
+			send_api_error(reel_object, call_info, response, "Failed")
 			frappe.msgprint(f"An error occurred while sending to ESB: {str(e)}")
 
 	except Exception as e:
 		frappe.msgprint(f"An error occurred: {str(e)}")
 
 	return added_reel_json
+
+
+
+def send_api_error(object, call_info, response, status):
+	doc = frappe.get_doc({
+		"doctype": "API Errors",
+		"original_doctype": object["doctype"],
+		"original_name": object["name"],
+		"api_url": call_info["url"],
+		"fail_time": datetime.datetime.now(),
+		"http_code": response["status_code"] if isinstance(response, dict) else response.status_code,
+		"http_response": response["text"] if isinstance(response, dict) else response.text,
+		"call_header": call_info["header"],
+		"call_load": call_info["load"],
+		"status": status
+	})
+	doc.insert()
+	frappe.msgprint("PUT DATA IN API ERROR")
