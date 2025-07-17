@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body>
+    <div class="title">
+      <img src="image.png" alt="Logo">
+      <h1><i>Roll To Reel BWT Comparison</i></h1>
+    </div>
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>TAPPI</th>
+            <th>Accuray Reel BWT Average</th>
+            <th>Roll BWT Average</th>
+            <th>Roll - Reel</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for reel in reels %}
+          <tr>
+            <td>{{ reel.reel[2:] }}</td>
+            <td>{{ reel.reel_bwt | float | round(2) }}</td>
+            <td>{{ reel.roll_bwt | float | round(2) }}</td>
+            <td>{{ reel.roll_sub_reel | float | round(2) }}</td>
+          </tr>
+          {% endfor %}
+          <tr class="average-row">
+            <td>Average</td>
+            <td>{{ average_reel | float | round(2) }}</td>
+            <td>{{ average_roll | float | round(2) }}</td>
+            <td>{{ average_diff | float | round(2) }}</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</body>
+</html>

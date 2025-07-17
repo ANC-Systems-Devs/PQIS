@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "autoname": "field:reel",
+ "creation": "2025-04-09 17:09:07.784147",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reel",
+  "grade_code",
+  "reel_bwt",
+  "roll_bwt",
+  "roll_sub_reel",
+  "start_time",
+  "turnup_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "reel",
+   "fieldtype": "Link",
+   "label": "Reel",
+   "options": "Reel",
+   "unique": 1
+  },
+  {
+   "fetch_from": "reel.gradecode",
+   "fieldname": "grade_code",
+   "fieldtype": "Data",
+   "label": "Grade Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reel_bwt",
+   "fieldtype": "Data",
+   "label": "Reel BWT",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "roll_bwt",
+   "fieldtype": "Data",
+   "label": "Roll BWT"
+  },
+  {
+   "fetch_from": "reel.starttime",
+   "fieldname": "start_time",
+   "fieldtype": "Data",
+   "label": "Start Time",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "reel.turnuptime",
+   "fieldname": "turnup_time",
+   "fieldtype": "Data",
+   "label": "Turnup time",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "roll_sub_reel",
+   "fieldtype": "Data",
+   "label": "Roll - Reel",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-10 15:25:14.240186",
+ "modified_by": "Administrator",
+ "module": "ANC",
+ "name": "Roll to Reel CMP",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

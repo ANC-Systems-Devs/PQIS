@@ -1,0 +1,108 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-11 16:18:26.930371",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tappi",
+  "accuracy_reel_bwt_avg",
+  "accuracy_reel_bwt_min",
+  "accuracy_reel_bwt_max",
+  "roll_bwt_avg",
+  "roll_bwt_min",
+  "roll_bwt_max",
+  "rollreel_bwt_avg",
+  "reel_bwt_1std",
+  "roll_bwt_1_std",
+  "rollreel_bwt_1std",
+  "grade_code"
+ ],
+ "fields": [
+  {
+   "fieldname": "tappi",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tappi"
+  },
+  {
+   "fieldname": "accuracy_reel_bwt_avg",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Accuracy Reel BWT Avg"
+  },
+  {
+   "fieldname": "accuracy_reel_bwt_min",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Accuracy Reel BWT Min"
+  },
+  {
+   "fieldname": "accuracy_reel_bwt_max",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Accuracy Reel BWT Max"
+  },
+  {
+   "fieldname": "roll_bwt_avg",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Roll BWT Avg"
+  },
+  {
+   "fieldname": "roll_bwt_min",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Roll BWT Min"
+  },
+  {
+   "fieldname": "roll_bwt_max",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Roll BWT Max"
+  },
+  {
+   "fieldname": "rollreel_bwt_avg",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Roll - Reel BWT Avg"
+  },
+  {
+   "fieldname": "reel_bwt_1std",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Reel BWT 1 STD"
+  },
+  {
+   "fieldname": "roll_bwt_1_std",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Roll BWT 1 STD "
+  },
+  {
+   "fieldname": "rollreel_bwt_1std",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Roll - Reel BWT STD"
+  },
+  {
+   "fieldname": "grade_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Grade Code"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-11 16:42:49.094357",
+ "modified_by": "Administrator",
+ "module": "PQIS",
+ "name": "Roll to Reel Child",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

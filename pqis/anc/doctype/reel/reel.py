@@ -690,16 +690,17 @@ def send_added_properties_json(reel_id, added_properties):
 				send_api_error(reel_object, call_info, response, "Success")			
 				frappe.msgprint("Added properties sent successfully to ESB.")
 		except Exception as e:
-			# doc = frappe.get_doc({
-			# 	"doctype": "Message Queue",
-			# 	"url": url,
-			# 	"original_doctype": "Reel",
-			# 	"error_time": datetime.now(),
-			# 	"header": headers,
-			# 	"message": added_reel_json
-			# })
-			# doc.insert()
-			# frappe.db.set_value("Message Queue", doc.name, "original_name", reel_id)
+			doc = frappe.get_doc({
+				"doctype": "Message Queue",
+				"url": url,
+				"status": "Pending",
+				"original_doctype": "Reel",
+				"error_time": datetime.datetime.now(),
+				"header": headers,
+				"message": added_reel_json
+			})
+			doc.insert()
+			frappe.db.set_value("Message Queue", doc.name, "original_name", reel_id)
 			if not response:
 				response = {"status_code": "Failed", "text": str(e)}
 			reel_object = {"doctype": "Reel", "name": reel_id}
