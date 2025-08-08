@@ -5,8 +5,8 @@ import frappe
 import requests
 import xml.etree.ElementTree as ET
 from frappe.model.document import Document
-from datetime import datetime
-from frappe.utils import get_datetime, now_datetime, add_days
+from datetime import datetime, timedelta
+from frappe.utils import get_datetime, now_datetime, add_days, format_datetime
 import pandas as pd
 import numpy as np
 import jinja2
@@ -147,7 +147,7 @@ def update_roll_bwt(report_query=False):
 
 		if report_query:
 			if roll_bwt == 0:
-				roll_bwt_avg = get_roll_data(cursor, reel_id)
+				roll_bwt_avg = get_roll_data(cursor, reel_id, start_time)
 				# frappe.db.set_value("Roll to Reel CMP", reel, "roll_bwt", round(roll_bwt_avg, 2))
 				doc = frappe.get_doc("Roll to Reel CMP", reel_id)
 				doc.roll_bwt = round(roll_bwt_avg, 2)
@@ -155,7 +155,7 @@ def update_roll_bwt(report_query=False):
 				reel_updated = True
 
 		if start_time >= add_days(now_datetime(), -2) and not reel_updated:
-			roll_bwt_avg = get_roll_data(cursor, reel_id)
+			roll_bwt_avg = get_roll_data(cursor, reel_id, start_time)
 			# frappe.db.set_value("Roll to Reel CMP", reel, "roll_bwt", round(roll_bwt_avg, 2))
 
 			doc = frappe.get_doc("Roll to Reel CMP", reel_id)
@@ -167,14 +167,33 @@ def update_roll_bwt(report_query=False):
 		
 
 @frappe.whitelist()
-def generate_pdf_document():
+def generate_pdf_document(reel_id=None, start_date=None, end_date=None):
 	script_dir = os.path.dirname(os.path.abspath(__file__))
 	template_loader = jinja2.FileSystemLoader(searchpath=script_dir)
 	template_env = jinja2.Environment(loader=template_loader)
 	template = template_env.get_template("template.html")
 	 
+	filters = []
+
+	if reel_id:
+		filters.append(["reel", "=", reel_id])
+	
+	if start_date and end_date:
+		filters.append(["start_time", ">=", start_date])
+		filters.append(["start_time", "<=", end_date])
+	elif start_date:
+		filters.append(["start_time", ">=", start_date])
+	elif end_date:
+		filters.append(["start_time", "<=", end_date])
+	
+	reels = frappe.db.get_list("Roll to Reel CMP", fields = ["reel", "reel_bwt", "roll_bwt", "roll_sub_reel", "grade_code"], filters=filters)
+
+	if not reels:
+		frappe.throw("No data found for the given filters.")
+	
 	update_roll_bwt(report_query=True)
-	reels = frappe.db.get_list("Roll to Reel CMP", fields = ["reel", "reel_bwt", "roll_bwt", "roll_sub_reel", "grade_code"])
+	reels = frappe.db.get_list("Roll to Reel CMP", fields = ["reel", "reel_bwt", "roll_bwt", "roll_sub_reel", "grade_code"], filters=filters)
+
 	count = len(reels)
 	total_reel = 0
 	total_roll = 0
@@ -202,6 +221,7 @@ def generate_pdf_document():
 		f.write(pdf)
 
 	return {
+		"filters": filters,
 		"file_url": f"/files/roll_to_reel_report.pdf",
 		"message": "PDF generated successfully"
 	}
@@ -225,33 +245,34 @@ def connect_db():
 		return None
 
 
-def get_roll_data(cursor, reel_id):
-	query = '''
-		SELECT inventory_no, basis_weight_actual
-		FROM [TM_DB_Production].[tm].[inventory]
-		WHERE inventory_no LIKE ?;
-	'''
+def get_roll_data(cursor, reel_id, start_time):
 
-	backup_query = '''
-		SELECT inventory_no, basis_weight_actual
-		FROM [TM_DB_Production].[tm].[inv_history]
-		WHERE inventory_no LIKE ?;
-	'''
+	# start_time_dt = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
+	to_date = start_time + timedelta(days=2)
+	to_date_str = to_date.strftime("%Y-%m-%d")
+	start_time_date = start_time.strftime("%Y-%m-%d")
 
-	query_param = reel_id + "%"
+	params = [start_time_date, to_date_str]
+	if reel_id:
+		params.append(reel_id)
+	params = tuple(params)
 
-	inventory = cursor.execute(query, query_param).fetchall()
-	inventory_history = cursor.execute(backup_query, query_param).fetchall()
+	query = """
+		SET NOCOUNT ON;
+		EXEC [tm].[TMEXP_RollBasisWeight] @from = ?, @to = ?, @reel_no = ?;
+	"""
+	
+	cursor.execute(query, params)
 
-	rows = inventory + inventory_history
-    
+	rows = cursor.fetchall()
+	
 	total_rolls = len(rows)
 	roll_sum = 0
 
-	# print("Result:")
+	print("Result:")
 	for row in rows:
-		roll_sum += row[1]
-		# print(row)
+		roll_sum += row[3]
+		print(row)
 	
 	if roll_sum == 0 and total_rolls == 0:
 		return 0
