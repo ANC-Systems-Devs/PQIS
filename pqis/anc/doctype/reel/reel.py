@@ -11,6 +11,7 @@ import os
 import xml.etree.ElementTree as ET
 import datetime
 from frappe.utils import get_datetime, format_datetime, now_datetime
+from frappe.utils.csvutils import build_csv_response
 	
 @frappe.whitelist()
 def save_raw_data(data):
@@ -276,6 +277,8 @@ class Reel(Document):
 			except Exception as e:
 				frappe.msgprint(f"An error occurred during the API call: {str(e)}")
 
+	#  This hook is run after reel is created
+	#  This creates a Roll to Reel CMP doc with only the reel field set
 	def after_insert(self):
 		doc = frappe.get_doc({
 			"doctype": "Roll to Reel CMP",
@@ -660,9 +663,9 @@ def send_added_properties_json(reel_id, added_properties):
 		# frappe.msgprint(f"Constructed JSON: {added_reel_json}")
 
 		# Send this JSON data to the external system (ESB)
-		#url = "http://10.12.50.85:8002/ESB_Shadab"  # Local Shadab ESB
-		#url = "http://10.12.60.175:50104/ESBPROD"  # ESB Test V01 URL
-		url = "http://10.12.60.75:50104/ESBPROD"  # ESB Prod V01 URL
+		# url = "http://10.12.50.85:8002/ESB_Shadab"  # Local Shadab ESB
+		# url = "http://10.12.60.175:50104/ESBPROD"  # ESB Test V01 URL
+		# url = "http://10.12.60.75:50104/ESBPROD"  # ESB Prod V01 URL
 		
 		headers = {
 			'Content-Type': 'application/json'

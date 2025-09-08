@@ -46,13 +46,65 @@ def get_roll_data(reel_id):
 
 	print("Result:")
 	for row in rows:
-		roll_sum += row[1]
-		print(row)
+		if row[1]:
+			roll_sum += row[1]
+		# print(row)
 	
 	roll_bwt_average = roll_sum/total_rolls
-	print(round(roll_bwt_average,2))
+	print(f"My query: {round(roll_bwt_average,2)}")
+	return rows
 
 
 
+def get_roll_bwt(reel_id=None):
+	cursor = connect_db()
+	params = ["2025-07-01", "2025-08-01"]
+	if reel_id:
+		params.append(reel_id)
+	params = tuple(params)
 
-get_roll_data("AB1W0422")
+	query = """
+		SET NOCOUNT ON;
+		EXEC [tm].[TMEXP_RollBasisWeight] @from = ?, @to = ?, @reel_no = ?;
+	"""
+	
+	cursor.execute(query, params)
+
+	rows = cursor.fetchall()
+	
+	total_rolls = len(rows)
+	roll_sum = 0
+
+	# print("Result:")
+	for row in rows:
+		roll_sum += row[3]
+		print(row)
+	
+	if roll_sum == 0 and total_rolls == 0:
+		print(f"Store procedure: {0}")
+	else:
+		roll_bwt_average = roll_sum/total_rolls
+		print(f"Store procedure: {roll_bwt_average}")
+
+	return rows
+
+
+# print(get_roll_bwt("AB1G1713"))
+# get_roll_data("AB1G1714")
+
+
+store_procedure = get_roll_bwt("AB1G1714")
+my_query = get_roll_data("AB1G1714")
+# print()
+# print()
+# get_roll_data("AB1G1713")
+
+# max_len = max(len(store_procedure), len(my_query))
+
+# for i in range(max_len):
+# 	if i < len(store_procedure) and i < len(my_query):
+# 		print(f"Store: {store_procedure[i][2]} - {store_procedure[i][3]}  |  My query: {my_query[i][0]} - {my_query[i][1]}  |  Same: {my_query[i][1] == store_procedure[i][3] and store_procedure[i][2] == my_query[i][0]}")
+# 	elif i < len(store_procedure):
+# 		print(f"Store: {store_procedure[i][2]} - {store_procedure[i][3]}")
+# 	else:
+# 		print(f"My query: {my_query[i][0]} - {my_query[i][1]}")
