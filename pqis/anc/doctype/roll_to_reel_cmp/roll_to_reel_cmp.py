@@ -14,6 +14,8 @@ import pdfkit
 import os
 from weasyprint import HTML
 import pyodbc
+from typing import List, Dict
+
 from decimal import Decimal
 
 
@@ -176,9 +178,9 @@ def generate_pdf_document(reel_id=None, start_date=None, end_date=None):
 	 
 	filters = []
 
+	# add all the filters based on reel_id, start_date, end_date
 	if reel_id:
 		filters.append(["reel", "=", reel_id])
-	
 	if start_date and end_date:
 		start_date += " 07:00:00"
 		end_date += " 07:00:00"
@@ -196,6 +198,7 @@ def generate_pdf_document(reel_id=None, start_date=None, end_date=None):
 	if not reels:
 		frappe.throw("No data found for the given filters.")
 	
+	# update the roll bwt before fetching reel data
 	update_roll_bwt(report_query=True)
 	reels = frappe.db.get_list("Roll to Reel CMP", fields = ["reel", "reel_bwt", "roll_bwt", "roll_sub_reel", "grade_code"], filters=filters, order_by="reel asc")
 
@@ -302,3 +305,118 @@ def get_roll_data(cursor, reel_id, start_time):
 
 	return roll_bwt_average
 
+MOPS_BASE = "http://10.12.60.77:5000"
+# TAG_NAME  = "ANCROLLREELBWTDIFF"
+TAG_NAME  = "ANCROLLREELBWTDIFF-TEST"
+@frappe.whitelist()
+def updateMops(start: str, end: str):
+	"""
+    Client passes start/end as 'YYYY-MM-DD HH:mm:ss' (user tz).
+    We parse and use them directly for filtering.
+    """
+
+	filters = []
+	if start:
+        # validate/normalize; we still pass the same string/dt into the filter
+		start_dt = get_datetime(start)
+		filters.append(["turnup_time", ">=", start_dt])
+		
+	if end:
+		end_dt = get_datetime(end)
+		filters.append(["turnup_time", "<=", end_dt])
+
+
+	# fetch the reels with the given filters
+	reels = frappe.db.get_list(
+		"Roll to Reel CMP", 
+		fields = ["reel", "reel_bwt", "roll_bwt", "turnup_time"],
+		filters=filters
+		)
+	
+	# write to mops for the reels with the roll_bwt - reel_bwt value
+	# into the tag ANCROLLREELBWTDIFF
+	# TimeStamp = turnup_time
+
+	payload: List[Dict] = []
+	skipped: List[Dict] = []
+
+	for r in reels:
+		reel_bwt = r.get("reel_bwt")
+		roll_bwt = r.get("roll_bwt") or 0
+		ts       = r.get("turnup_time")
+
+		if reel_bwt is None or roll_bwt is None or ts is None:
+			skipped.append({
+				"name": r.get("name"),
+				"reason": "Missing reel_bwt/roll_bwt/turnup_time",
+				"reel_bwt": reel_bwt, "roll_bwt": roll_bwt, "turnup_time": ts
+			})
+			continue
+
+		# calculate roll_bwt - reel_bwt
+		try:
+			diff = float(roll_bwt) - float(reel_bwt)
+		except Exception:
+			skipped.append({
+				"name": r.get("name"),
+				"reason": "Non-numeric bwt",
+				"reel_bwt": reel_bwt, "roll_bwt": roll_bwt
+			})
+			continue
+		
+		# Use expected MOPS timestamp format: MM-DD-YYYY HH:MM:SS
+		ts_str = get_datetime(ts).strftime("%m-%d-%Y %H:%M:%S")
+		payload.append({
+        	"TagName": TAG_NAME,
+        	"DoubleValue": diff,
+        	"TimeStamp": ts_str
+		})
+
+
+	attempted = len(reels)
+	to_send   = len(payload)
+
+	# -------- POST to MOPS ----------
+	sent = 0
+	errors: List[str] = []
+
+	headers = {"Content-Type": "application/json"}
+	try:
+		if to_send == 0:
+			pass  # nothing to send
+		elif to_send == 1:
+			# WriteOne
+			url = f"{MOPS_BASE}/api/MopsWriteOne"
+			resp = requests.post(url, headers=headers, json=payload[0])
+			if resp.ok:
+				sent = 1
+			else:
+				errors.append(f"WriteOne HTTP {resp.status_code}: {resp.text}")
+		else:
+			# WriteMany, chunk if you want (example: batches of 500)
+			url = f"{MOPS_BASE}/api/MopsWriteMany"
+			batch_size = 500
+			for i in range(0, to_send, batch_size):
+				batch = payload[i:i+batch_size]
+				resp = requests.post(url, headers=headers, json=batch)
+				if resp.ok:
+					sent += len(batch)
+				else:
+					errors.append(f"WriteMany HTTP {resp.status_code} at batch {i}-{i+len(batch)-1}: {resp.text}")
+	except Exception as e:
+		# Log and bubble a summarized error up in the response (but do not raise to the client)
+		frappe.log_error(frappe.get_traceback(), "MOPS write failed")
+		errors.append(f"Exception while writing to MOPS: {e}")
+
+
+
+
+
+	return {
+		"attempted": attempted,       # rows fetched in window
+		"prepared": to_send,          # rows we created payloads for
+		"sent": sent,                 # rows successfully POSTed
+		"skipped": skipped,           # rows skipped with reasons
+		"errors": errors              # any HTTP/exception errors
+	}
+	
