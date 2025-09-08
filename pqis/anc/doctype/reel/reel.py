@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _ 
 import requests
 import json
 from frappe.model.document import Document
@@ -95,10 +96,10 @@ class Reel(Document):
 					turnuptime = self.turnuptime
 
 					if not starttime or not turnuptime:
-						raise ValueError("Missing starttime or turnuptime for the reel.")
+						frappe.throw(_("Start Time and Turn-up Time are required before marking the reel Complete"))
 
 					#Fetching properties with 'DataHub' source and valid rt_tag
-					properties = fetch_properties(['DataHub'])
+					properties = fetch_properties(['DataHub']) or []
 				except Exception as e:
 					frappe.msgprint(f"An error occurred while fetching properties: {str(e)}")
 
@@ -198,82 +199,82 @@ class Reel(Document):
 
 
 	# # def after_insert(self):
-	# def insert_datahub_data(self):
-	# 	# 1. Notify that a new reel has been created
-	# 	frappe.msgprint(f"New Reel {self.reelid} has been created.")
+	def insert_datahub_data(self):
+		# 1. Notify that a new reel has been created
+		frappe.msgprint(f"New Reel {self.reelid} has been created.")
 		
-	# 	# 2. Call the function to send an email about reel creation
-	# 	# self.send_reel_creation_email(self.reelid)
+		# 2. Call the function to send an email about reel creation
+		# self.send_reel_creation_email(self.reelid)
 
-	# 	# 3. Fetch information of the reel that has been inserted
-	# 	try:
-	# 		reel_id = self.reelid
-	# 		starttime = self.starttime
-	# 		turnuptime = self.turnuptime
+		# 3. Fetch information of the reel that has been inserted
+		try:
+			reel_id = self.reelid
+			starttime = self.starttime
+			turnuptime = self.turnuptime
 
-	# 		# 4. Fetch properties with 'DataHub' source and valid rt_tag
-	# 		properties = fetch_properties(['DataHub'])
-	# 	except Exception as e:
-	# 		frappe.msgprint(f"An error occurred while fetching properties: {str(e)}")
+			# 4. Fetch properties with 'DataHub' source and valid rt_tag
+			properties = fetch_properties(['DataHub'])
+		except Exception as e:
+			frappe.msgprint(f"An error occurred while fetching properties: {str(e)}")
 
-	# 	# 5. For each property, make an API call and insert data into Reel Quality
-	# 	for prop in properties:
+		# 5. For each property, make an API call and insert data into Reel Quality
+		for prop in properties:
 
-	# 		property_data = {
-	# 			'reelid': reel_id,
-	# 			'propertyid': prop['propertyid'],
-	# 			'property': prop['property'],
-	# 			'rt_tag': prop['rt_tag'],
-	# 			'starttime': starttime,
-	# 			'turnuptime': turnuptime,
-	# 			'value': ''  # Empty field for value to be fetched from API
-	# 		}
+			property_data = {
+				'reelid': reel_id,
+				'propertyid': prop['propertyid'],
+				'property': prop['property'],
+				'rt_tag': prop['rt_tag'],
+				'starttime': starttime,
+				'turnuptime': turnuptime,
+				'value': ''  # Empty field for value to be fetched from API
+			}
 
-	# 		# Make the API call
-	# 		rt_tag = property_data['rt_tag']
-	# 		url = "http://10.12.60.77:5000/api/MopsHIstoryOne"
-	# 		headers = {"Content-Type": "application/json"}
-	# 		data = {
-	# 			"TagName": rt_tag,
-	# 			"start": str(property_data['starttime']),
-	# 			"end": str(property_data['turnuptime']),
-	# 			"numValues": "14",
-	# 			"interpolationMethod": "Aggregate",
-	# 			"aggregateType": "PointAverage"
-	# 		}
+			# Make the API call
+			rt_tag = property_data['rt_tag']
+			url = "http://10.12.60.77:5000/api/MopsHIstoryOne"
+			headers = {"Content-Type": "application/json"}
+			data = {
+				"TagName": rt_tag,
+				"start": str(property_data['starttime']),
+				"end": str(property_data['turnuptime']),
+				"numValues": "14",
+				"interpolationMethod": "Aggregate",
+				"aggregateType": "PointAverage"
+			}
 
-	# 		try:
-	# 			response = requests.post(url, headers=headers, json=data)
-	# 			if response.status_code == 200:
-	# 				# Parse XML response to extract the value
-	# 				root = ET.fromstring(response.text)
-	# 				values = root.find(".//Value").text
-	# 				property_data['value'] = values
+			try:
+				response = requests.post(url, headers=headers, json=data, timeout=10)
+				if response.status_code == 200:
+					# Parse XML response to extract the value
+					root = ET.fromstring(response.text)
+					values = root.find(".//Value").text
+					property_data['value'] = values
 					
-	# 				# Insert new entry into 'Reel Quality'
-	# 				frappe.get_doc({
-	# 					'doctype': 'Reel Quality',
-	# 					'reelid': reel_id,
-	# 					'propertyid': property_data['propertyid'][-3:],
-	# 					'property': property_data['property'],
-	# 					'average': property_data['value'],  # Use value from API response
-	# 					'standard_deviation': None,
-	# 					'mean': None,
-	# 					'minimum': None,
-	# 					'maximum': None,
-	# 					'median': None,
-	# 					'scanlength': None,
-	# 					'scanfrequency': None,
-	# 					'detailcount': None,
-	# 					'valuetype': None
-	# 				}).insert(ignore_permissions=True)
-	# 				insert_missing_conversion_properties(property_data, reel_id)
-	# 				frappe.msgprint(f"New Reel Quality Entry Created: {property_data}")
+					# Insert new entry into 'Reel Quality'
+					frappe.get_doc({
+						'doctype': 'Reel Quality',
+						'reelid': reel_id,
+						'propertyid': property_data['propertyid'][-3:],
+						'property': property_data['property'],
+						'average': property_data['value'],  # Use value from API response
+						'standard_deviation': None,
+						'mean': None,
+						'minimum': None,
+						'maximum': None,
+						'median': None,
+						'scanlength': None,
+						'scanfrequency': None,
+						'detailcount': None,
+						'valuetype': None
+					}).insert(ignore_permissions=True)
+					insert_missing_conversion_properties(property_data, reel_id)
+					frappe.msgprint(f"New Reel Quality Entry Created: {property_data}")
 					
-	# 			else:
-	# 				frappe.msgprint(f"Failed to get a successful response: {response.status_code}")
-	# 		except Exception as e:
-	# 			frappe.msgprint(f"An error occurred during the API call: {str(e)}")
+				else:
+					frappe.msgprint(f"Failed to get a successful response: {response.status_code}")
+			except Exception as e:
+				frappe.msgprint(f"An error occurred during the API call: {str(e)}")
 
 	def after_insert(self):
 		doc = frappe.get_doc({
@@ -660,8 +661,8 @@ def send_added_properties_json(reel_id, added_properties):
 
 		# Send this JSON data to the external system (ESB)
 		#url = "http://10.12.50.85:8002/ESB_Shadab"  # Local Shadab ESB
-		url = "http://10.12.60.175:50104/ESBPROD"  # ESB Test V01 URL
-		#url = "http://10.12.60.75:50104/ESBPROD"  # ESB Prod V01 URL
+		#url = "http://10.12.60.175:50104/ESBPROD"  # ESB Test V01 URL
+		url = "http://10.12.60.75:50104/ESBPROD"  # ESB Prod V01 URL
 		
 		headers = {
 			'Content-Type': 'application/json'
@@ -670,21 +671,10 @@ def send_added_properties_json(reel_id, added_properties):
 		response = None
 		# Send the request
 		try:
-			response = requests.post(url, headers=headers, json=added_reel_json)
+			response = requests.post(url, headers=headers, json=added_reel_json, timeout=10)
 			if response.status_code != 200 and response.status_code != 202:
 				raise Exception("Unsuccessful post to ESB.")
 			else:
-				# doc = frappe.get_doc({
-				# 	"doctype": "Message Queue",
-				# 	"url": url,
-				# 	"status": "Sent",
-				# 	"original_doctype": "Reel",
-				# 	"error_time": datetime.datetime.now(),
-				# 	"header": headers,
-				# 	"message": added_reel_json
-				# })
-				# doc.insert()
-				# frappe.db.set_value("Message Queue", doc.name, "original_name", reel_id)
 				reel_object = {"doctype": "Reel", "name": reel_id}
 				call_info = {"url": url, "header": headers, "load": added_reel_json}
 				send_api_error(reel_object, call_info, response, "Success")			

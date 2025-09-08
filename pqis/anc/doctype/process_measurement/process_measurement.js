@@ -226,6 +226,33 @@ frappe.ui.form.on("Process Measurement", {
         cur_frm.fields_dict["process_measurement_details"].grid.wrapper.find(".grid-insert-row-below").hide();
         cur_frm.fields_dict["process_measurement_details"].grid.wrapper.find(".grid-move-row").hide();
     },
+
+    reprocess(frm) {
+        if(frm.doc.workflow_state == "Entered"){
+            console.log("reached");
+            let process_measurement_details_data = []
+            frm.doc.process_measurement_details.forEach((row) => {
+                process_measurement_details_data.push({
+                    "time": row.time,
+                    "tag": row.tag,
+                    "value": row.value
+                })
+            });
+            frappe.call({
+                method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_esb',
+                args: {
+                    name: frm.doc.name,
+                    date: frm.doc.date,
+                    process_measurement_details: process_measurement_details_data
+                },
+                callback: function(r){
+                    // sendFlag = true;
+                    console.log("webhook started");
+                    console.log(r);
+                }
+            })
+        }
+    }
 });
 
 frappe.ui.form.on('Process Measurement Detail', {

@@ -19,13 +19,13 @@ function show_report_filters() {
         {
             label: 'Start Date',
             fieldname: 'start_date',
-            fieldtype: 'Datetime',
+            fieldtype: 'Date',
             reqd: 0
         },
         {
             label: 'End Date',
             fieldname: 'end_date',
-            fieldtype: 'Datetime',
+            fieldtype: 'Date',
             reqd: 0
         }
     ],
@@ -42,7 +42,7 @@ function show_report_filters() {
 
 
 function create_report(filters) {
-    frappe.msgprint("Create Report");
+    frappe.msgprint("Creating Report...");
     frappe.call({
         method: "pqis.anc.doctype.roll_to_reel_cmp.roll_to_reel_cmp.generate_pdf_document",
         args: {
@@ -53,7 +53,7 @@ function create_report(filters) {
         callback: function(r) {
             if (r.message.file_url) {
                 frappe.msgprint(r.message.message);
-                frappe.msgprint("Filters used: " + JSON.stringify(r.message.filters, null, 2));
+                // frappe.msgprint("Filters used: " + JSON.stringify(r.message.filters, null, 2));
                 window.open(r.message.file_url);
             }
         }

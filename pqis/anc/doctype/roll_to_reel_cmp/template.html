@@ -16,6 +16,7 @@
         <thead>
           <tr>
             <th>TAPPI</th>
+            <th>Grade Code</th>
             <th>Accuray Reel BWT Average</th>
             <th>Roll BWT Average</th>
             <th>Roll - Reel</th>
@@ -25,6 +26,7 @@
           {% for reel in reels %}
           <tr>
             <td>{{ reel.reel[2:] }}</td>
+            <td>{{ reel.grade_code }}</td>
             <td>{{ reel.reel_bwt | float | round(2) }}</td>
             <td>{{ reel.roll_bwt | float | round(2) }}</td>
             <td>{{ reel.roll_sub_reel | float | round(2) }}</td>
@@ -32,6 +34,7 @@
           {% endfor %}
           <tr class="average-row">
             <td>Average</td>
+            <td></td>
             <td>{{ average_reel | float | round(2) }}</td>
             <td>{{ average_roll | float | round(2) }}</td>
             <td>{{ average_diff | float | round(2) }}</td>

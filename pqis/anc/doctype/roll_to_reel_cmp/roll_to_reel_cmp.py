@@ -14,13 +14,14 @@ import pdfkit
 import os
 from weasyprint import HTML
 import pyodbc
+from decimal import Decimal
 
 
 class RolltoReelCMP(Document):
 	def validate(self):
 		if self.is_new():
 			if (self.start_time and self.turnup_time):
-				frappe.msgprint(f"Start time: {self.start_time} and turnup time: {self.turnup_time}")
+				# frappe.msgprint(f"Start time: {self.start_time} and turnup time: {self.turnup_time}")
 
 				mops_value = get_MOPS_data(
 					starttime= self.start_time.strftime("%m-%d-%Y %H:%M:%S"),
@@ -35,8 +36,8 @@ class RolltoReelCMP(Document):
 		else:
 			old_doc = self.get_doc_before_save()
 			if old_doc:
-				frappe.msgprint(f"Old Start: {old_doc.start_time}, Old Turnup: {old_doc.turnup_time}")
-				frappe.msgprint(f"Current Start: {self.start_time}, Current Turnup: {self.turnup_time}")
+				# frappe.msgprint(f"Old Start: {old_doc.start_time}, Old Turnup: {old_doc.turnup_time}")
+				# frappe.msgprint(f"Current Start: {self.start_time}, Current Turnup: {self.turnup_time}")
 				if (self.start_time and self.turnup_time and (
 					get_datetime(self.start_time) != get_datetime(old_doc.start_time) or 
 					get_datetime(self.turnup_time) != get_datetime(old_doc.turnup_time
@@ -56,7 +57,7 @@ class RolltoReelCMP(Document):
 						frappe.msgprint(("VALUE NOT UPDATED"))
 	
 	def on_update(self):
-		frappe.msgprint("UPDATED")
+		# frappe.msgprint("UPDATED")
 		roll_value = float(self.roll_bwt)
 		reel_value = float(self.reel_bwt)
 		roll_sub_reel = roll_value - reel_value
@@ -179,11 +180,15 @@ def generate_pdf_document(reel_id=None, start_date=None, end_date=None):
 		filters.append(["reel", "=", reel_id])
 	
 	if start_date and end_date:
+		start_date += " 07:00:00"
+		end_date += " 07:00:00"
 		filters.append(["start_time", ">=", start_date])
 		filters.append(["start_time", "<=", end_date])
 	elif start_date:
+		end_date += " 07:00:00"
 		filters.append(["start_time", ">=", start_date])
 	elif end_date:
+		end_date += " 07:00:00"
 		filters.append(["start_time", "<=", end_date])
 	
 	reels = frappe.db.get_list("Roll to Reel CMP", fields = ["reel", "reel_bwt", "roll_bwt", "roll_sub_reel", "grade_code"], filters=filters)
@@ -192,7 +197,7 @@ def generate_pdf_document(reel_id=None, start_date=None, end_date=None):
 		frappe.throw("No data found for the given filters.")
 	
 	update_roll_bwt(report_query=True)
-	reels = frappe.db.get_list("Roll to Reel CMP", fields = ["reel", "reel_bwt", "roll_bwt", "roll_sub_reel", "grade_code"], filters=filters)
+	reels = frappe.db.get_list("Roll to Reel CMP", fields = ["reel", "reel_bwt", "roll_bwt", "roll_sub_reel", "grade_code"], filters=filters, order_by="reel asc")
 
 	count = len(reels)
 	total_reel = 0
@@ -207,7 +212,7 @@ def generate_pdf_document(reel_id=None, start_date=None, end_date=None):
 		"reels": reels,
 		"average_reel": (total_reel/count),
 		"average_roll": (total_roll/count),
-		"average_diff": (total_diff/count)
+		"average_diff": (total_diff/count),
 	}
 
 	html_out = template.render(context)
@@ -245,6 +250,15 @@ def connect_db():
 		return None
 
 
+def safe_convert(value):
+    if isinstance(value, datetime):
+        return value.strftime("%Y-%m-%d %H:%M:%S")
+    elif isinstance(value, Decimal):
+        return float(value)
+    else:
+        return value
+
+
 def get_roll_data(cursor, reel_id, start_time):
 
 	# start_time_dt = datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S")
@@ -269,10 +283,17 @@ def get_roll_data(cursor, reel_id, start_time):
 	total_rolls = len(rows)
 	roll_sum = 0
 
-	print("Result:")
+	# print("Result:")
 	for row in rows:
-		roll_sum += row[3]
-		print(row)
+		# safe_row = [safe_convert(v) for v in row]
+
+		# with open(os.path.join(os.path.dirname(__file__), "roll_data_log.txt"), "a") as logger:
+		# 	logger.write(f"Row: {safe_row}\n")
+		if row[3]:
+			roll_sum += row[3]
+		else:
+			roll_sum += 0
+		# print(row)
 	
 	if roll_sum == 0 and total_rolls == 0:
 		return 0
