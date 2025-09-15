@@ -59,12 +59,37 @@ class RolltoReelCMP(Document):
 						frappe.msgprint(("VALUE NOT UPDATED"))
 	
 	def on_update(self):
-		# frappe.msgprint("UPDATED")
 		roll_value = float(self.roll_bwt)
 		reel_value = float(self.reel_bwt)
 		roll_sub_reel = roll_value - reel_value
 		self.roll_sub_reel = roll_sub_reel
 		frappe.db.set_value("Roll to Reel CMP", self.reel, "roll_sub_reel", roll_sub_reel)
+		
+		# make MOPS call to write the latest value to ANCROLLREELBWTDIFF tag
+		# for roll_bwt - reel_bwt
+
+		if roll_value is not None and roll_value != 0 and self.turnup_time:
+			write_to_mops(self.turnup_time, self.roll_sub_reel)
+
+
+MOPS_BASE = "http://10.12.60.77:5000"
+# TAG_NAME  = "ANCROLLREELBWTDIFF"
+TAG_NAME  = "ANCROLLREELBWTDIFF-TEST"
+def write_to_mops(turnup_time,roll_sub_reel):
+	headers = {"Content-Type": "application/json"}
+	ts_str = get_datetime(turnup_time or now_datetime()).strftime("%m-%d-%Y %H:%M:%S")
+
+	payload = {
+		"TagName": TAG_NAME,
+		"DoubleValue": roll_sub_reel,
+		"TimeStamp": ts_str,
+	}
+	try:
+		res = requests.post(f"{MOPS_BASE}/api/MopsWriteOne", headers=headers, json=payload)
+		if not res.ok:
+			frappe.log_error(f"Failed to write to MOPS: {res.status_code} - {res.text}", "MOPS Write Error")
+	except Exception as e:
+		frappe.log_error(frappe.get_traceback(), "MOPS Write Exception")
 
 @frappe.whitelist()
 def get_MOPS_data(starttime, turnuptime):
@@ -305,9 +330,7 @@ def get_roll_data(cursor, reel_id, start_time):
 
 	return roll_bwt_average
 
-MOPS_BASE = "http://10.12.60.77:5000"
-# TAG_NAME  = "ANCROLLREELBWTDIFF"
-TAG_NAME  = "ANCROLLREELBWTDIFF-TEST"
+
 @frappe.whitelist()
 def updateMops(start: str, end: str):
 	"""
