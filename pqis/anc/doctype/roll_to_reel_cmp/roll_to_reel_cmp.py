@@ -73,8 +73,8 @@ class RolltoReelCMP(Document):
 
 
 MOPS_BASE = "http://10.12.60.77:5000"
-# TAG_NAME  = "ANCROLLREELBWTDIFF"
-TAG_NAME  = "ANCROLLREELBWTDIFF-TEST"
+TAG_NAME  = "ANCROLLREELBWTDIFF"
+# TAG_NAME  = "ANCROLLREELBWTDIFF-TEST"
 def write_to_mops(turnup_time,roll_sub_reel):
 	headers = {"Content-Type": "application/json"}
 	ts_str = get_datetime(turnup_time or now_datetime()).strftime("%m-%d-%Y %H:%M:%S")
