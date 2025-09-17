@@ -665,7 +665,7 @@ def send_added_properties_json(reel_id, added_properties):
 		# Send this JSON data to the external system (ESB)
 		# url = "http://10.12.50.85:8002/ESB_Shadab"  # Local Shadab ESB
 		# url = "http://10.12.60.175:50104/ESBPROD"  # ESB Test V01 URL
-		# url = "http://10.12.60.75:50104/ESBPROD"  # ESB Prod V01 URL
+		url = "http://10.12.60.75:50104/ESBPROD"  # ESB Prod V01 URL
 		
 		headers = {
 			'Content-Type': 'application/json'
