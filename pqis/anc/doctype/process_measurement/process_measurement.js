@@ -16,9 +16,11 @@ frappe.ui.form.on("Process Measurement", {
             $('*[data-fieldname="set_time"]').hide();
             $('*[data-fieldname="apply_time"]').hide();
 
-            frm.set_value('date', frappe.datetime.now_date());
-            frm.refresh_fields('date');
-
+            // Stop setting values to today's date by default
+            // frm.set_value('date', frappe.datetime.now_date());
+            // frm.refresh_fields('date');
+            
+            
             frm.set_value('datecreated', frappe.datetime.now_datetime());
             frm.refresh_fields("datecreated");
 
@@ -199,7 +201,11 @@ frappe.ui.form.on("Process Measurement", {
     processid(frm) {
         frm.enable_save();
 
-        fetchChildList(frm, cur_frm);
+        // fetchChildList(frm, cur_frm);
+        // To prevent duplicate data entr
+        if (frm.doc.date){
+            fetchChildList(frm, cur_frm);
+        }
     },
 
     date(frm) {
@@ -262,7 +268,11 @@ frappe.ui.form.on('Process Measurement Detail', {
  });
 
 function fetchChildList(frm, cur_frm) {
-    if (frm.doc.areaid != undefined && frm.doc.processid != undefined) {
+    
+    // frm.doc.areaid != undefined && frm.doc.processid != undefined
+
+    // allow childDoc fetch when area,process,date is set - to prevent duplication of rows
+    if (frm.doc.areaid && frm.doc.processid && frm.doc.date) {
         $('*[data-fieldname="set_time"]').hide();
         $('*[data-fieldname="apply_time"]').hide();
 
