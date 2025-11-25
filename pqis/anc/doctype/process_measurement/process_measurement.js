@@ -1,8 +1,27 @@
 // Copyright (c) 2023, ANC and contributors
 // For license information, please see license.txt
 
+
+// works without quick entry
+function limit_process_measurement_date(frm) {
+    if (frm.fields_dict.date && frm.fields_dict.date.datepicker) {
+        const todayStr = frappe.datetime.get_today();           // "2025-11-19"
+        const parts = todayStr.split("-");                      // ["2025","11","19"]
+
+        const today = new Date(parts[0], parts[1] - 1, parts[2]); // Local date!
+
+        frm.fields_dict.date.datepicker.update({
+            maxDate: today
+        });
+    }
+}
+
+
+
 frappe.ui.form.on("Process Measurement", {
+
 	refresh(frm) {
+        limit_process_measurement_date(frm);
         $('*[data-fieldname="process_measurement_details"]').find('button.grid-add-row').addClass('hide');
 
         $('*[data-label="Print"]').closest('a').hide();
@@ -113,6 +132,8 @@ frappe.ui.form.on("Process Measurement", {
 	},
 
     onload(frm, cdt, cdn) {
+
+        limit_process_measurement_date(frm);
         // for process link
         frm.set_query("processid", function() {
             return {
@@ -134,7 +155,7 @@ frappe.ui.form.on("Process Measurement", {
 
     after_workflow_action(frm){
         if (frm.doc.workflow_state == 'Entered'){
-            console.log("reached");
+            console.log("reached and workflow state: " + frm.doc.workflow_state);
             let process_measurement_details_data = []
             frm.doc.process_measurement_details.forEach((row) => {
                 process_measurement_details_data.push({
@@ -143,6 +164,29 @@ frappe.ui.form.on("Process Measurement", {
                     "value": row.value
                 })
             });
+            // call to write process entry to DW
+            frappe.call({
+                method: 'pqis.anc.doctype.process_measurement.process_measurement.transferDataFromFrappeToDW',
+                callback: function(r){
+                    
+                    console.log("Transfer data frappe to DW");
+                    try {
+                    // Safely log the response
+                    console.log("Full response:", r);
+
+                    if (r && r.message) {
+                        console.log("Status:", r.message.status || "no status");
+                        console.log("Rows:", r.message.rows || r.message);
+                    } else {
+                        console.log("No message returned from server.");
+                    }
+                    } catch (e) {
+                        console.error("Error reading response:", e);
+                        console.log("Raw server response (maybe HTML):", r);
+                    }
+                            console.log(" Transfer data frappe to DW MESSAGE: " + r.message + r.message.status);
+                }
+            })
             frappe.call({
                 method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_esb',
                 args: {
@@ -152,7 +196,7 @@ frappe.ui.form.on("Process Measurement", {
                 },
                 callback: function(r){
                     // sendFlag = true;
-                    console.log("webhook started");
+                    console.log("webhook started for ESB, after workflow action");
                     console.log(r);
                 }
             })
@@ -161,7 +205,7 @@ frappe.ui.form.on("Process Measurement", {
 
     after_save(frm){
         if(frm.doc.workflow_state == "Entered"){
-            console.log("reached");
+            console.log("reached")
             let process_measurement_details_data = []
             frm.doc.process_measurement_details.forEach((row) => {
                 process_measurement_details_data.push({
@@ -169,7 +213,7 @@ frappe.ui.form.on("Process Measurement", {
                     "tag": row.tag,
                     "value": row.value
                 })
-            });
+            });           
             frappe.call({
                 method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_esb',
                 args: {
@@ -276,6 +320,18 @@ function fetchChildList(frm, cur_frm) {
         $('*[data-fieldname="set_time"]').hide();
         $('*[data-fieldname="apply_time"]').hide();
 
+        // 🔹 1) Remember existing values BEFORE clearing table
+        let existingValues = {};
+        (frm.doc.process_measurement_details || []).forEach(row => {
+            const key = `${row.subprocessid}::${row.propertyid}`;
+            existingValues[key] = {
+                value: row.value,
+                // time: row.time
+            };
+        });
+
+        console.log("Existing value",existingValues)
+
         cur_frm.clear_table("process_measurement_details"); 
         cur_frm.refresh_fields("process_measurement_details");
 
@@ -286,7 +342,7 @@ function fetchChildList(frm, cur_frm) {
                     'secondDate': JSON.stringify({'areaid': frm.doc.areaid, 'processid': frm.doc.processid, 'date': frappe.datetime.add_days(frm.doc.date, -2)})
                 },
             callback: function(response) {
-                console.log("success", response);
+                console.log("success for fetch_processspec:", response);
 
                 const currentDate = frm.doc.date;
                 const currentTime = frappe.datetime.now_time();
@@ -319,7 +375,7 @@ function fetchChildList(frm, cur_frm) {
                                     canAddChild = false;
                                 }
                             }
-                            
+                            console.log("CAN ADD CHILD: " + canAddChild)
                             if (canAddChild) {
                                 let prevValue = "";
                                 let prev2ndValue = "";
@@ -336,8 +392,24 @@ function fetchChildList(frm, cur_frm) {
 
                                 let formattedString = String(count++).padStart(4, '0');
 
+                                // 🔹 3) Try to restore existing value/time for this tag
+                                const key = `${item.subprocessid}::${item.propertyid}`;
+                                const saved = existingValues[key] || {};
+                                // decide what time to use:
+                                // - if there was a previous row for this tag → keep its time
+                                // - otherwise → use current time (same as your original behavior)
+                                // let rowTime;
+                                // if (saved.time) {
+                                //     rowTime = saved.time;
+                                // } else {
+                                //     rowTime = frappe.datetime.now_time();
+                                // }
+
+                                // const rowTime = frm.doc.set_time || frappe.datetime.now_time();
+
                                 frm.add_child('process_measurement_details', {
                                     time: frappe.datetime.now_time(),
+                                    // time: rowTime,
                                     processmeasurementdtlid: `PRCMDTL0${formattedString}`,
                                     subprocessid: item.subprocessid,
                                     subprocessdesc: item.subprocess,
@@ -347,7 +419,8 @@ function fetchChildList(frm, cur_frm) {
                                     units: item.units,
                                     measureid: item.measureid == null ? "null" : item.measureid,
                                     measurename: item.measurename,
-                                    value: "",
+                                    value: saved.value || "",   // keep old value if present
+                                    // value: "",   
                                     prev_value_first: prevValue,
                                     prev_value_second: prev2ndValue
                                 });

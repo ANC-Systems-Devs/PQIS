@@ -5,6 +5,8 @@ import frappe
 import json
 from frappe.model.document import Document
 import requests
+import pyodbc
+
 from datetime import datetime
 @frappe.whitelist()
 def auto_increment_id():
@@ -40,6 +42,7 @@ def fetch_processspec_for_color(data):
 @frappe.whitelist()
 def fetch_processspec(data, firstDate, secondDate):
 	try:
+		# Converts the incoming JSON string into a Python dictionary
 		deserialize = json.loads(data)
 		doc = frappe.db.get_value('Process Specs', deserialize, 'name')
 		docParent = frappe.db.get_value('Process Specs', deserialize, ['name', 'areaid', 'processid'])
@@ -96,8 +99,8 @@ class ProcessMeasurement(Document):
 @frappe.whitelist()
 def generate_post_to_esb(name, date, process_measurement_details):
 	#URL to ESB location
-	url = "http://10.12.60.92:50104/ESBPROD"
-	# url = "http://10.12.60.175:50102/ESBTEST"
+	# url = "http://10.12.60.92:50104/ESBPROD"
+	url = "http://10.12.60.175:50102/ESBTEST"
 
 	if(int(name) < 100):
 		formatted_name = "PRMC00" + name
@@ -143,3 +146,52 @@ def generate_post_to_esb(name, date, process_measurement_details):
 		doc.insert()
 		frappe.db.set_value("Message Queue", doc.name, "original_name", name)
 		return str(e)
+
+# connect to testdb
+def connect_db():
+	conn, cursor = connect_db()
+	try:
+		cursor.execute(
+			'DRIVER={ODBC Driver 17 for SQL Server};'
+            'SERVER=dev-dw-v01.ad.altanewsprint.ca;'
+            'DATABASE=AdventureWorksDW2022(MS Test DB);'
+            'UID=neuron;'
+            'PWD=a1bert@123456;'
+		)
+		# Make the rows JSON-serializable
+		columns = [col[0] for col in cursor.description]
+		data = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+		return {"status": "ok", "rows": data}
+	except Exception as e:
+		frappe.throw(f"Database connection failed: {str(e)}")
+
+# writes to the DW when a PM entry is made 
+@frappe.whitelist()
+def transferDataFromFrappeToDW():
+	try:
+		frappe.logger().info("Connecting to SQL Server...")
+		conn = pyodbc.connect(
+            'DRIVER={ODBC Driver 17 for SQL Server};'
+            'SERVER=dev-dw-v01.ad.altanewsprint.ca;'
+            'DATABASE=AdventureWorksDW2022(MS Test DB);'
+            'UID=neuron;'
+            'PWD=a1bert@123456;'
+        )
+		cursor = conn.cursor()
+		cursor.execute("""
+            SELECT TOP (100)
+                [CurrencyKey],
+                [CurrencyAlternateKey],
+                [CurrencyName]
+            FROM [AdventureWorksDW2022(MS Test DB)].[dbo].[DimCurrency];
+        """)
+		columns = [col[0] for col in cursor.description]
+		data = [dict(zip(columns, row)) for row in cursor.fetchall()]
+		return {"message": data}
+	except Exception as e:
+		print("❌ Connection failed:")
+		print(e)
+	finally:
+		cursor.close()
+		conn.close()
