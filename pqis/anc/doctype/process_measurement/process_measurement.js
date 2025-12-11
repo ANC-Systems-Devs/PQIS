@@ -164,42 +164,25 @@ frappe.ui.form.on("Process Measurement", {
                     "value": row.value
                 })
             });
-            // call to write process entry to DW
-            frappe.call({
-                method: 'pqis.anc.doctype.process_measurement.process_measurement.transferDataFromFrappeToDW',
-                callback: function(r){
-                    
-                    console.log("Transfer data frappe to DW");
-                    try {
-                    // Safely log the response
-                    console.log("Full response:", r);
 
-                    if (r && r.message) {
-                        console.log("Status:", r.message.status || "no status");
-                        console.log("Rows:", r.message.rows || r.message);
-                    } else {
-                        console.log("No message returned from server.");
-                    }
-                    } catch (e) {
-                        console.error("Error reading response:", e);
-                        console.log("Raw server response (maybe HTML):", r);
-                    }
-                            console.log(" Transfer data frappe to DW MESSAGE: " + r.message + r.message.status);
-                }
-            })
+
+            // send data to Haber edge server
             frappe.call({
-                method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_esb',
-                args: {
-                    name: frm.doc.name,
-                    date: frm.doc.date,
-                    process_measurement_details: process_measurement_details_data
-                },
-                callback: function(r){
-                    // sendFlag = true;
-                    console.log("webhook started for ESB, after workflow action");
-                    console.log(r);
-                }
-            })
+            method: 'pqis.anc.doctype.process_measurement.process_measurement.send_data_to_haber',
+            args: {
+                name: frm.doc.name,
+                areaid: frm.doc.areaid,
+                processid: frm.doc.processid,
+                date: frm.doc.date,
+                process_measurement_details: process_measurement_details_data
+            },
+            callback: function (r) {
+                console.log("🔥 Final Payload Sent:", r.message.payload);
+                console.log("🔥 Raw JSON Sent:", r.message.raw_body);
+                console.log("🔥 Server Response:", r.message.response_text);
+                console.log("🔥 HTTP Status:", r.message.http_status);
+            }
+        })
         }
     },
 

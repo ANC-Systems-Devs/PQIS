@@ -99,8 +99,8 @@ class ProcessMeasurement(Document):
 @frappe.whitelist()
 def generate_post_to_esb(name, date, process_measurement_details):
 	#URL to ESB location
-	# url = "http://10.12.60.92:50104/ESBPROD"
-	url = "http://10.12.60.175:50102/ESBTEST"
+	url = "http://10.12.60.92:50104/ESBPROD"
+	# url = "http://10.12.60.175:50102/ESBTEST"
 
 	if(int(name) < 100):
 		formatted_name = "PRMC00" + name
@@ -264,8 +264,166 @@ def sendMissingDataToESB(from_date, to_date):
 
 	return msg
 
+def _get_haber_tags():
+	"""
+    Returns a Python set of all tags configured in 'Haber Process Tags' doctype.
+    """
+	tags = frappe.get_all("Haber process tags", pluck="Tag")
+	return set(tags or [])
 
-# writes to the DW when a PM entry is made 
+@frappe.whitelist()
+def send_data_to_haber(name, areaid, processid, date, process_measurement_details):
+    """
+    Send Process Measurement data to the Edge server (manual_data webhook).
+
+    - Filters detail rows to only those whose tag exists in 'Haber Process Tags'
+    - Builds payload:
+        {
+          "areaId": "...",
+          "processId": "...",
+          "measurementDate": "...",
+          "measurements": [
+            { "tag": "...", "time": "...", "value": ... },
+            ...
+          ]
+        }
+    - Signs the raw JSON body with HEX(HMAC-SHA256(secret, raw_body))
+      and sends as X-Webhook-Signature header (NOT YET).
+    """
+
+    url = "http://10.12.60.51:3000/manual_data"
+    secret = "52dDze0SVljQ12"
+
+    # 1) Decode process_measurement_details (can arrive as JSON string or list)
+    try:
+        if isinstance(process_measurement_details, str):
+            details = json.loads(process_measurement_details)
+        else:
+            details = process_measurement_details
+    except Exception:
+        frappe.throw("Invalid process_measurement_details payload.")
+
+    # 2) Load allowed tags from Haber Process Tags
+    allowed_tags = _get_haber_tags()
+
+    # 3) Filter and build measurements list
+    measurements = []
+    for row in details or []:
+        tag = row.get("tag")
+        value = row.get("value")
+        time = row.get("time")
+
+        if not tag:
+            continue
+
+        # only tags present in Haber Process Tags
+        if tag not in allowed_tags:
+            continue
+
+        # skip completely empty values
+        if value is None or value == "":
+            continue
+
+        measurements.append({
+            "tag": tag,
+            "time": time,
+            "value": value
+        })
+
+    # 4) If nothing to send, just return
+    if not measurements:
+        return {
+            "status": "NoData",
+            "message": "No matching tags found in Haber Process Tags for this document."
+        }
+
+    # 5) Build final payload
+    payload = {
+        "areaId": areaid,
+        "processId": processid,
+        "measurementDate": date,
+        "measurements": measurements
+    }
+
+    # 6) Serialize with stable separators (no extra spaces) – important for signature
+    raw_body = json.dumps(payload, separators=(",", ":"))
+
+    # 7) Compute HEX(HMAC-SHA256(secret, raw_body)) - NOT USED YET
+    # signature = hmac.new(
+    #     secret.encode("utf-8"),
+    #     raw_body.encode("utf-8"),
+    #     hashlib.sha256
+    # ).hexdigest()
+
+    headers = {
+        "Content-Type": "application/json",
+        "X-Webhook-Signature": secret
+    }
+
+    # 8) Send HTTP POST
+    try:
+        response = requests.post(url, headers=headers, data=raw_body, timeout=5)
+
+        # optional: treat only 200/202 as success
+        if response.status_code not in (200, 202):
+            status = "Pending"
+        else:
+            status = "Sent"
+
+        # OPTIONAL: log to Message Queue like your ESB integration
+        try:
+            doc = frappe.get_doc({
+                "doctype": "Message Queue",
+                "url": url,
+                "status": status,
+                "original_doctype": "Process Measurement",
+                "original_name": name,
+                "error_time": datetime.now(),
+                "header": headers,
+                "message": payload
+            })
+            doc.insert()
+        except Exception:
+            # don't block main flow if logging fails
+            frappe.log_error(frappe.get_traceback(), "Manual Data Webhook Logging Failed")
+
+        return {
+            "status": status,
+            "payload": payload,
+            "raw_body": raw_body,
+            # "signature": signature,  # add later when you compute it
+            "http_status": response.status_code,
+            "response_text": response.text
+        }
+
+    except Exception as e:
+        # network/timeout error – log and return
+        frappe.log_error(frappe.get_traceback(), "Manual Data Webhook Error")
+
+        try:
+            doc = frappe.get_doc({
+                "doctype": "Message Queue",
+                "url": url,
+                "original_doctype": "Process Measurement",
+                "original_name": name,
+                "error_time": datetime.now(),
+                "header": headers,
+                "message": payload
+            })
+            doc.insert()
+        except Exception:
+            frappe.log_error(frappe.get_traceback(), "Manual Data Webhook Logging Failed (Exception Path)")
+
+        return {
+			"status": status,
+			"payload": payload,              # 🔥 send payload back
+			"raw_body": raw_body,            # 🔥 raw JSON string
+			"http_status": response.status_code,
+			"response_text": response.text
+		}
+
+
+# writes to the DW when a PM entry is made  - this is a test function only
 @frappe.whitelist()
 def transferDataFromFrappeToDW():
 	try:
