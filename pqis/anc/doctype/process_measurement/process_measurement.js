@@ -182,7 +182,23 @@ frappe.ui.form.on("Process Measurement", {
                 console.log("🔥 Server Response:", r.message.response_text);
                 console.log("🔥 HTTP Status:", r.message.http_status);
             }
-        })
+            })
+
+            // post to esb
+            frappe.call({
+                method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_esb',
+                args: {
+                    name: frm.doc.name,
+                    date: frm.doc.date,
+                    process_measurement_details: process_measurement_details_data
+                },
+                callback: function(r){
+                    // sendFlag = true;
+                    console.log("WEBHOOK started for ESB, after workflow action");
+                    console.log(r);
+                }
+            })
+
         }
     },
 
