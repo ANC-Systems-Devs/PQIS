@@ -59,8 +59,8 @@ class RolltoReelCMP(Document):
 						frappe.msgprint(("VALUE NOT UPDATED"))
 	
 	def on_update(self):
-		roll_value = float(self.roll_bwt)
-		reel_value = float(self.reel_bwt)
+		roll_value = float(self.roll_bwt or 0)
+		reel_value = float(self.reel_bwt or 0)
 		roll_sub_reel = roll_value - reel_value
 		self.roll_sub_reel = roll_sub_reel
 		frappe.db.set_value("Roll to Reel CMP", self.reel, "roll_sub_reel", roll_sub_reel)
@@ -170,7 +170,7 @@ def update_roll_bwt(report_query=False):
 	for reel in reels:
 		reel_id = reel.reel
 		start_time = get_datetime(reel.start_time)
-		roll_bwt = float(reel.roll_bwt)
+		roll_bwt = float(reel.roll_bwt or 0)
 		reel_updated = False
 
 		if report_query:

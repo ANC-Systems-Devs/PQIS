@@ -37,6 +37,21 @@ class Reel(Document):
 	# This code is auto-generated. Do not modify anything in this block.
 
 	from typing import TYPE_CHECKING
+	def autoname(self):
+		# adjust fieldnames
+		reelid = self.reelid or ""
+		dt = self.starttime  # Datetime field
+
+		if not dt:
+			frappe.throw("starttime is required to generate ID")
+
+		# dt might already be datetime or a string, handle both
+		if isinstance(dt, str):
+			dt = frappe.utils.get_datetime(dt)
+
+		year = dt.strftime("%Y")
+		self.name = f"{reelid}-{year}"
+
 
 	if TYPE_CHECKING:
 		from frappe.types import DF
@@ -92,7 +107,7 @@ class Reel(Document):
 				frappe.msgprint(f"Reel {self.reelid} has passed the update testing phase.")
 				# self.send_reel_creation_email(self.reelid)
 				try:
-					reel_id = self.reelid
+					reel_id = self.name
 					starttime = self.starttime
 					turnuptime = self.turnuptime
 
@@ -191,7 +206,7 @@ class Reel(Document):
 
 			elif self.buildstatus == 'Tested':
 				try:
-					reel_id = self.reelid
+					reel_id = self.name
 					added_properties = fetch_properties(['Paperlab'])
 					if added_properties:
 						send_added_properties_json(reel_id, added_properties)
@@ -209,7 +224,7 @@ class Reel(Document):
 
 		# 3. Fetch information of the reel that has been inserted
 		try:
-			reel_id = self.reelid
+			reel_id = self.name
 			starttime = self.starttime
 			turnuptime = self.turnuptime
 
@@ -282,7 +297,7 @@ class Reel(Document):
 	def after_insert(self):
 		doc = frappe.get_doc({
 			"doctype": "Roll to Reel CMP",
-			"reel": self.reelid,
+			"reel": self.name,
 		})
 		doc.insert()
 		
