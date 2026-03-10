@@ -160,6 +160,7 @@ def generate_report():
 
 @frappe.whitelist()
 def update_roll_bwt(report_query=False):
+	
 	reels = frappe.db.get_list("Roll to Reel CMP", fields=["reel", "roll_bwt", "start_time"])
 	cursor = connect_db()
 
@@ -221,6 +222,7 @@ def generate_pdf_document(reel_id=None, start_date=None, end_date=None):
 		end_date += " 07:00:00"
 		filters.append(["start_time", "<=", end_date])
 	
+	# is fetching based on reelID-YYYY
 	reels = frappe.db.get_list("Roll to Reel CMP", fields = ["reel", "reel_bwt", "roll_bwt", "roll_sub_reel", "grade_code"], filters=filters)
 
 	if not reels:
