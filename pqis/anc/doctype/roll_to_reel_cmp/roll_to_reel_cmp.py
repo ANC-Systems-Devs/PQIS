@@ -160,6 +160,7 @@ def generate_report():
 
 @frappe.whitelist()
 def update_roll_bwt(report_query=False):
+	
 	reels = frappe.db.get_list("Roll to Reel CMP", fields=["reel", "roll_bwt", "start_time"])
 	cursor = connect_db()
 
@@ -168,7 +169,11 @@ def update_roll_bwt(report_query=False):
 		return
 	
 	for reel in reels:
-		reel_id = reel.reel
+		# reel_id = reel.reel   # reelID-YYYY
+
+		reel_docname = reel.reel   # reelID-YYYY
+		reel_id = reel_docname.rsplit("-", 1)[0] 	# reelID
+
 		start_time = get_datetime(reel.start_time)
 		roll_bwt = float(reel.roll_bwt or 0)
 		reel_updated = False
@@ -177,7 +182,7 @@ def update_roll_bwt(report_query=False):
 			if roll_bwt == 0:
 				roll_bwt_avg = get_roll_data(cursor, reel_id, start_time)
 				# frappe.db.set_value("Roll to Reel CMP", reel, "roll_bwt", round(roll_bwt_avg, 2))
-				doc = frappe.get_doc("Roll to Reel CMP", reel_id)
+				doc = frappe.get_doc("Roll to Reel CMP", reel_docname)
 				doc.roll_bwt = round(roll_bwt_avg, 2)
 				doc.save(ignore_permissions=True)
 				reel_updated = True
@@ -185,8 +190,7 @@ def update_roll_bwt(report_query=False):
 		if start_time >= add_days(now_datetime(), -2) and not reel_updated:
 			roll_bwt_avg = get_roll_data(cursor, reel_id, start_time)
 			# frappe.db.set_value("Roll to Reel CMP", reel, "roll_bwt", round(roll_bwt_avg, 2))
-
-			doc = frappe.get_doc("Roll to Reel CMP", reel_id)
+			doc = frappe.get_doc("Roll to Reel CMP", reel_docname)
 			doc.roll_bwt = round(roll_bwt_avg, 2)
 			doc.save(ignore_permissions=True)				
 
@@ -218,6 +222,7 @@ def generate_pdf_document(reel_id=None, start_date=None, end_date=None):
 		end_date += " 07:00:00"
 		filters.append(["start_time", "<=", end_date])
 	
+	# is fetching based on reelID-YYYY
 	reels = frappe.db.get_list("Roll to Reel CMP", fields = ["reel", "reel_bwt", "roll_bwt", "roll_sub_reel", "grade_code"], filters=filters)
 
 	if not reels:

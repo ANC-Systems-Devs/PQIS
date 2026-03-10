@@ -37,20 +37,20 @@ class Reel(Document):
 	# This code is auto-generated. Do not modify anything in this block.
 
 	from typing import TYPE_CHECKING
-	def autoname(self):
-		# adjust fieldnames
-		reelid = self.reelid or ""
-		dt = self.starttime  # Datetime field
+	# def autoname(self):
+	# 	# adjust fieldnames
+	# 	reelid = self.reelid or ""
+	# 	dt = self.starttime  # Datetime field
 
-		if not dt:
-			frappe.throw("starttime is required to generate ID")
+	# 	if not dt:
+	# 		frappe.throw("starttime is required to generate ID")
 
-		# dt might already be datetime or a string, handle both
-		if isinstance(dt, str):
-			dt = frappe.utils.get_datetime(dt)
+	# 	# dt might already be datetime or a string, handle both
+	# 	if isinstance(dt, str):
+	# 		dt = frappe.utils.get_datetime(dt)
 
-		year = dt.strftime("%Y")
-		self.name = f"{reelid}-{year}"
+	# 	year = dt.strftime("%Y")
+	# 	self.name = f"{reelid}-{year}"
 
 
 	if TYPE_CHECKING:
