@@ -204,12 +204,16 @@ class Reel(Document):
 				if added_properties:
 					send_added_properties_json(reel_id, added_properties)
 
+					#  send data to node-red
+					send_added_properties_to_nodered(reel_id, added_properties)
+
 			elif self.buildstatus == 'Tested':
 				try:
 					reel_id = self.name
 					added_properties = fetch_properties(['Paperlab'])
 					if added_properties:
 						send_added_properties_json(reel_id, added_properties)
+						send_added_properties_to_nodered(reel_id, added_properties)
 				except Exception as e:
 					frappe.msgprint(f"An error occurred while fetching Paperlab properties: {str(e)}")
 
@@ -679,8 +683,8 @@ def send_added_properties_json(reel_id, added_properties):
 
 		# Send this JSON data to the external system (ESB)
 		# url = "http://10.12.50.85:8002/ESB_Shadab"  # Local Shadab ESB
-		# url = "http://10.12.60.175:50104/ESBPROD"  # ESB Test V01 URL
-		url = "http://10.12.60.75:50104/ESBPROD"  # ESB Prod V01 URL
+		url = "http://10.12.60.175:50104/ESBPROD"  # ESB Test V01 URL
+		# url = "http://10.12.60.75:50104/ESBPROD"  # ESB Prod V01 URL
 		
 		headers = {
 			'Content-Type': 'application/json'
@@ -721,6 +725,105 @@ def send_added_properties_json(reel_id, added_properties):
 
 	return added_reel_json
 
+@frappe.whitelist()
+def send_added_properties_to_nodered(reel_id, added_properties):
+	try:
+		if isinstance(added_properties, str):
+			added_properties = frappe.parse_json(added_properties)
+		
+		reel_info = frappe.get_doc('Reel', reel_id)
+
+		starttime = reel_info.starttime.strftime('%Y-%m-%d %H:%M:%S') if reel_info.starttime else None
+		turnuptime = reel_info.turnuptime.strftime('%Y-%m-%d %H:%M:%S') if reel_info.turnuptime else None
+
+		added_reel_quality_entries = []
+
+		for prop in added_properties:
+			reel_quality_entry = frappe.get_all(
+				'Reel Quality',
+				filters={
+					'reelid': reel_id,
+					'propertyid': prop['name']
+				},
+				fields=['propertyid', 'property', 'average']
+			)
+
+			if reel_quality_entry:
+				entry = reel_quality_entry[0]
+
+				property_details = frappe.get_all(
+					'Property',
+					filters={'name': entry['propertyid']},
+					fields=['quality_form', 'units', 'conversion_multiplier']
+				)
+
+				if property_details:
+					property_detail = property_details[0]
+					entry['quality_form'] = property_detail.get('quality_form')
+					entry['units'] = property_detail.get('units')
+					entry['conversion_multiplier'] = property_detail.get('conversion_multiplier')
+				else:
+					entry['quality_form'] = None
+					entry['units'] = None
+					entry['conversion_multiplier'] = None
+
+				simplified_entry = {
+					"propertyid": entry['propertyid'],
+					"property": entry['property'],
+					"average": entry['average'],
+					"quality_form": entry['quality_form'],
+					"units": entry['units'],
+					"conversion_multiplier": entry['conversion_multiplier']
+				}
+
+				added_reel_quality_entries.append(simplified_entry)
+
+		added_reel_json = {
+			"reelid": reel_id,
+			"starttime": starttime,
+			"turnuptime": turnuptime,
+			"doctype": "Datahub Reel Quality Data Entry",
+			"entries": added_reel_quality_entries
+		}
+
+		url = "https://10.12.61.102:1880/quality/inbound"
+		headers = {
+			'Content-Type': 'application/json'
+		}
+
+		response = None
+		try:
+			response = requests.post(url, headers=headers, json=added_reel_json, timeout=10, verify=False)
+			if response.status_code != 200 and response.status_code != 202:
+				raise Exception("Unsuccessful post to Node-RED.")
+			else:
+				reel_object = {"doctype": "Reel", "name": reel_id}
+				call_info = {"url": url, "header": headers, "load": added_reel_json}
+				send_api_error(reel_object, call_info, response, "Success")
+				frappe.msgprint("Added properties sent successfully to Node-RED.")
+		except Exception as e:
+			doc = frappe.get_doc({
+				"doctype": "Message Queue",
+				"url": url,
+				"status": "Pending",
+				"original_doctype": "Reel",
+				"error_time": datetime.datetime.now(),
+				"header": headers,
+				"message": added_reel_json
+			})
+			doc.insert()
+			frappe.db.set_value("Message Queue", doc.name, "original_name", reel_id)
+			if not response:
+				response = {"status_code": "Failed", "text": str(e)}
+			reel_object = {"doctype": "Reel", "name": reel_id}
+			call_info = {"url": url, "header": headers, "load": added_reel_json}
+			send_api_error(reel_object, call_info, response, "Failed")
+			frappe.msgprint(f"An error occurred while sending to Node-RED: {str(e)}")
+
+	except Exception as e:
+		frappe.msgprint(f"An error occurred in Node-RED payload generation: {str(e)}")
+
+	return added_reel_json
 
 
 def send_api_error(object, call_info, response, status):
