@@ -153,81 +153,93 @@ class ProcessMeasurement(Document):
 
 @frappe.whitelist()
 def generate_post_to_esb(name, date, process_measurement_details):
-	# URL to ESB location
-	# url = "http://10.12.60.92:50104/ESBPROD"
-	url = "http://10.12.60.175:50102/ESBTEST"
+	# This function sends Process Measurement data to Node-RED endpoints and no more for ESB.
 
-	if(int(name) < 100):
-		formatted_name = "PRMC00" + name
-	else:
-		formatted_name = "PRMC0" + name
+	'''
+	From June 23rd onwards, the ESB endpoint is no longer used for Process Measurement data.
+	Instead, we send the data to Node-RED, which handles the routing to the appropriate systems.
+	
+	'''
+	# ------------------------- Commented out ESB code below -------------------------
 
-	# data needed to be sent
-	data = {
-		"name": formatted_name,
-		"date": date,
-		"process_measurement_details": json.loads(process_measurement_details)
-	}
+	# # URL to ESB location
+	# #url = "http://10.12.60.92:50104/ESBPROD"
+	# url = "http://10.12.60.175:50102/ESBTEST"
 
-	headers = {
-		"Content-Type": "application/json"
-	}
+	# if(int(name) < 100):
+	# 	formatted_name = "PRMC00" + name
+	# else:
+	# 	formatted_name = "PRMC0" + name
 
-	recipients = ["jawadc@albertanewsprint.com"]
+	# # data needed to be sent
+	# data = {
+	# 	"name": formatted_name,
+	# 	"date": date,
+	# 	"process_measurement_details": json.loads(process_measurement_details)
+	# }
 
-	# optional email block - do not return here
-	try:
-		sendmail(
-			recipients,
-			subject='TEST PQIS',
-			message=json.dumps(data, indent=2),
-		)
-		print("Email sent successfully.")
-	except Exception as e:
-		print("Error during email sending:", str(e))
-		frappe.log_error(message=str(e), title="Email Sending Error")
+	# headers = {
+	# 	"Content-Type": "application/json"
+	# }
+
+	# recipients = ["jawadc@albertanewsprint.com"]
+
+	# # optional email block - do not return here
+	# try:
+	# 	sendmail(
+	# 		recipients,
+	# 		subject='TEST PQIS',
+	# 		message=json.dumps(data, indent=2),
+	# 	)
+	# 	print("Email sent successfully.")
+	# except Exception as e:
+	# 	print("Error during email sending:", str(e))
+	# 	frappe.log_error(message=str(e), title="Email Sending Error")
+
+		# try:
+	# 	response = requests.post(url, headers=headers, json=data, timeout=5)
+	# 	if response.status_code not in (200, 202):
+	# 		raise Exception("Unsuccessful post")
+	# 	else:
+	# 		doc = frappe.get_doc({
+	# 			"doctype": "Message Queue",
+	# 			"url": url,
+	# 			"status": "Sent",
+	# 			"original_doctype": "Process Measurement",
+	# 			"error_time": datetime.now(),
+	# 			"header": headers,
+	# 			"message": data
+	# 		})
+	# 		doc.insert()
+	# 		frappe.db.set_value("Message Queue", doc.name, "original_name", name)
+
+	# 	return {
+	# 		"esb_response": response.text,
+	# 		"node_red_response": node_red_result
+	# 	}
+
+	# except Exception as e:
+	# 	doc = frappe.get_doc({
+	# 		"doctype": "Message Queue",
+	# 		"url": url,
+	# 		"original_doctype": "Process Measurement",
+	# 		"error_time": datetime.now(),
+	# 		"header": headers,
+	# 		"message": data
+	# 	})
+	# 	doc.insert()
+	# 	frappe.db.set_value("Message Queue", doc.name, "original_name", name)
+
+	# 	return {
+	# 		"esb_response": str(e),
+	# 		"node_red_response": node_red_result
+	# 	}
+
+
+	# ------------------------- End of Commented out ESB code -------------------------
 
 	# call Node-RED with the same arguments/payload design
 	node_red_result = generate_post_to_node_red(name, date, process_measurement_details)
-
-	try:
-		response = requests.post(url, headers=headers, json=data, timeout=5)
-		if response.status_code not in (200, 202):
-			raise Exception("Unsuccessful post")
-		else:
-			doc = frappe.get_doc({
-				"doctype": "Message Queue",
-				"url": url,
-				"status": "Sent",
-				"original_doctype": "Process Measurement",
-				"error_time": datetime.now(),
-				"header": headers,
-				"message": data
-			})
-			doc.insert()
-			frappe.db.set_value("Message Queue", doc.name, "original_name", name)
-
-		return {
-			"esb_response": response.text,
-			"node_red_response": node_red_result
-		}
-
-	except Exception as e:
-		doc = frappe.get_doc({
-			"doctype": "Message Queue",
-			"url": url,
-			"original_doctype": "Process Measurement",
-			"error_time": datetime.now(),
-			"header": headers,
-			"message": data
-		})
-		doc.insert()
-		frappe.db.set_value("Message Queue", doc.name, "original_name", name)
-
-		return {
-			"esb_response": str(e),
-			"node_red_response": node_red_result
-		}
 
 @frappe.whitelist()
 def generate_post_to_node_red(name, date, process_measurement_details):
@@ -426,7 +438,7 @@ def send_data_to_haber(name, areaid, processid, date, process_measurement_detail
       and sends as X-Webhook-Signature header (NOT YET).
     """
 	# use this url to send data to Haber edge server (it is for prod so dont send from test)
-    url = "http://10.12.60.51:3000/manual_dataa" 
+    url = "http://10.12.60.51:3000/manual_data" 
     secret = "52dDze0SVljQ12"
 
     # 1) Decode process_measurement_details (can arrive as JSON string or list)
