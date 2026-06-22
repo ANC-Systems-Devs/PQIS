@@ -162,8 +162,8 @@ def generate_post_to_esb(name, date, process_measurement_details):
 	'''
 	# ------------------------- Commented out ESB code below -------------------------
 
-	# # URL to ESB location
-	# #url = "http://10.12.60.92:50104/ESBPROD"
+	# URL to ESB location
+	url = "http://10.12.60.92:50104/ESBPROD"
 	# url = "http://10.12.60.175:50102/ESBTEST"
 
 	# if(int(name) < 100):
@@ -243,7 +243,7 @@ def generate_post_to_esb(name, date, process_measurement_details):
 
 @frappe.whitelist()
 def generate_post_to_node_red(name, date, process_measurement_details):
-	url = "https://10.12.61.102:1880/paperlab/process-measurements"
+	url = "https://10.12.60.102:1880/paperlab/process-measurements"
 
 	if(int(name) < 100):
 		formatted_name = "PRMC00" + name
