@@ -186,7 +186,7 @@ frappe.ui.form.on("Process Measurement", {
 
             // post to esb
             frappe.call({
-                method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_esb',
+                method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_node_red',
                 args: {
                     name: frm.doc.name,
                     date: frm.doc.date,
@@ -214,7 +214,7 @@ frappe.ui.form.on("Process Measurement", {
                 })
             });           
             frappe.call({
-                method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_esb',
+                method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_node_red',
                 args: {
                     name: frm.doc.name,
                     date: frm.doc.date,
@@ -288,7 +288,7 @@ frappe.ui.form.on("Process Measurement", {
                 })
             });
             frappe.call({
-                method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_esb',
+                method: 'pqis.anc.doctype.process_measurement.process_measurement.generate_post_to_node_red',
                 args: {
                     name: frm.doc.name,
                     date: frm.doc.date,
